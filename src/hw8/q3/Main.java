@@ -9,13 +9,12 @@ public class Main {
     public static void main(String[] args) {
         someMethod();
 
-
     }
 
     private static void someMethod() {
         try {
             someMethod2();
-        } catch (Exception e2) {
+        } catch (ArithmeticException e2) {
             e2.getStackTrace();
             throw new ArithmeticException();
         }

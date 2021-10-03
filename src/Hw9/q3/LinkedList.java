@@ -63,7 +63,6 @@ public class LinkedList {
         last.next = null;
     }
 
-
     private Node getPrevious(Node node) {
         Node currentNode = first.next;
         while (currentNode != null) {

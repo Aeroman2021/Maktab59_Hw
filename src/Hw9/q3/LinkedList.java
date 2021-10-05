@@ -2,23 +2,25 @@ package Hw9.q3;
 
 public class LinkedList {
 
-    private class Node {
+
+
+    private class Node{
+        private int value;
+        private Node next;
 
         public Node(int value) {
             this.value = value;
         }
-
-        private int value;
-        private Node next;
     }
 
     private Node first;
     private Node last;
+    private int index ;
 
-    public void addLast(int item) {
+    public void addLast(LinkedList ls,int item) {
         Node node = new Node(item);
 
-        if (isEmpty())
+        if (isEmpty(ls))
             first = last = node;
         else {
             last.next = node;
@@ -26,9 +28,9 @@ public class LinkedList {
         }
     }
 
-    public void addFirst(int item) {
+    public void addFirst(LinkedList ls,int item) {
         Node node = new Node(item);
-        if (isEmpty())
+        if (isEmpty(ls))
             first = last = node;
         else {
             node.next = first;
@@ -36,9 +38,9 @@ public class LinkedList {
         }
     }
 
-    public void removeFirst() throws NoSuchFieldException {
+    public void removeFirst(LinkedList ls) throws NoSuchFieldException {
 
-        if (isEmpty())
+        if (isEmpty(ls))
             throw new NoSuchFieldException();
 
         if (first == last)
@@ -49,8 +51,8 @@ public class LinkedList {
         first = second;
     }
 
-    public void removeLast() throws NoSuchFieldException {
-        if (isEmpty())
+    public void removeLast(LinkedList ls) throws NoSuchFieldException {
+        if (isEmpty(ls))
             throw new NoSuchFieldException();
 
         if (first == last) {
@@ -73,25 +75,33 @@ public class LinkedList {
         return null;
     }
 
-    public boolean contain(int item) {
-        return indexOf(item) != -1;
+    public boolean contain(LinkedList list,int item) {
+        return indexOf( list,item) != -1;
     }
 
-    public int indexOf(int item) {
-        int index = 0;
-        Node currenNode = first.next;
-        while (currenNode != null) {
-            if (currenNode.value == item)
+    public int indexOf(LinkedList list,int item) {
+
+        Node currentNode = list.first;
+        while (currentNode != null) {
+            if (currentNode.value == item)
                 return index;
-            currenNode = currenNode.next;
+            currentNode = currentNode.next;
             index++;
         }
         return -1;
     }
 
+    public void printLinkedList(LinkedList list){
+        Node currentNode = list.first;
+        while (currentNode != null){
+            System.out.print(currentNode.value + " ");
+            currentNode = currentNode.next;
+        }
+    }
 
-    public boolean isEmpty() {
-        return first == null;
+
+    public boolean isEmpty(LinkedList list) {
+        return list.first == null;
     }
 
 

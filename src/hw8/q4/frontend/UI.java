@@ -12,13 +12,13 @@ public class UI {
     public static void main(String[] args) throws SQLException, ManagerException, DbException {
         dbManager dbmanager = new dbManager();
         dbmanager.initializeDatabase();
-        dbmanager.insertCityData();
-        dbmanager.insertTeamsData();
-        dbmanager.insertCoachData();
-        dbmanager.insertMatchData();
-        dbmanager.insertPlayerData();
-        dbmanager.insertStadiumData();
-        dbmanager.insertTeamsMatchPerformanceData();
+        dbmanager.InsertCityData();
+        dbmanager.InsertTeamsData();
+        dbmanager.InsertCoachData();
+        dbmanager.InsertMatchData();
+        dbmanager.InsertPlayerData();
+        dbmanager.InsertStadiumData();
+        dbmanager.InsertTeamsMatchPerformanceData();
 
         UIManager manager = new UIManager();
         manager.Run();

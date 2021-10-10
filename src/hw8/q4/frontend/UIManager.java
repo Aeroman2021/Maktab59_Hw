@@ -35,12 +35,13 @@ public class UIManager {
         System.out.println("7) Transfer a player");
         System.out.println("8) print the mostpaid player");
         System.out.println("9) Delete a player");
-        System.out.println("10) print the list of cities and the number of their teams");
-        System.out.println("11) print the ranking table");
-        System.out.println("12) print the league champion");
-        System.out.println("13) print the list of derbies ");
-        System.out.println("14) print the list of derbies with the most scored goals");
-        System.out.println("15) exit");
+        System.out.println("10) print players performance in matches");
+        System.out.println("11) print the list of cities and the number of their teams");
+        System.out.println("12) print the ranking table");
+        System.out.println("13) print the league champion");
+        System.out.println("14) print the list of derbies ");
+        System.out.println("15) print the list of derbies with the most scored goals");
+        System.out.println("16) exit");
         System.out.println();
 
     }
@@ -175,28 +176,32 @@ public class UIManager {
                     leagueManager.DeletePlayer(id);
                     break;
 
-
                 case 10:
+                    leagueManager.PrintPlayersPerformanceInMatches();
+                    break;
+
+
+                case 11:
                     leagueManager.PrintListOfTeamInEachCity();
                     break;
 
-                case 11:
+                case 12:
                     leagueManager.PrintFinalRankingTable();
                     break;
 
-                case 12:
+                case 13:
                     leagueManager.PrintLeagueChampion();
                     break;
 
-                case 13:
+                case 14:
                     leagueManager.PrintDerbyMatches();
                     break;
 
-                case 14:
+                case 15:
                     leagueManager.PrintMostScoredGoalsDerby();
                     break;
 
-                case 15:
+                case 16:
                     System.out.println("Exiting the application...");
                     System.exit(0);
             }

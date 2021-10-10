@@ -65,8 +65,6 @@ public class dbManager {
                     " CONSTRAINT `match_team_id_fk` FOREIGN KEY (`team_home_id`) REFERENCES `team` (`id`) ON DELETE CASCADE ON UPDATE CASCADE," +
                     " CONSTRAINT `match_team_id_fk_2` FOREIGN KEY (`team_away_id`) REFERENCES `team` (`id`) ON DELETE CASCADE ON UPDATE CASCADE)" +
                     " ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
-
-
         }
 
 
@@ -102,7 +100,7 @@ public class dbManager {
         }
 
         private static class playerTransfer {
-            private static String CREATE_TABLE = "CREATE TABLE `player_transfer` (" +
+            private static String CREATE_TABLE = "CREATE TABLE if not exist `player_transfer` (" +
                     " `id` int(11) NOT NULL AUTO_INCREMENT," +
                     " `player_id` smallint(6) NOT NULL," +
                     "`first_team_id` smallint(6) NOT NULL," +
@@ -120,7 +118,7 @@ public class dbManager {
 
 
         private static class TeamMatchPerformance {
-            private static String CREATE_TABLE = "CREATE TABLE `team_match_performance` (" +
+            private static String CREATE_TABLE = "CREATE TABLE if not exist `team_match_performance` (" +
                     "`team_id` smallint(6) NOT NULL," +
                     "`match_id` smallint(6) NOT NULL," +
                     " `scored_golas` smallint(6) NOT NULL," +
@@ -133,6 +131,22 @@ public class dbManager {
                     "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
 
 
+        }
+
+        private static class PlayerMatchPerformance {
+            private static String CREATE_TABLE =
+
+                    " CREATE TABLE if not exist `player_match_performance` (" +
+                            "`player_id` smallint(6) NOT NULL," +
+                            " `match_id` smallint(6) NOT NULL," +
+                            " `team_id` smallint(6) NOT NULL," +
+                            " `scored_goals` int(11) NOT NULL," +
+                            " PRIMARY KEY (`player_id`,`match_id`)," +
+                            " KEY `player_match_performance_FK` (`match_id`)," +
+                            " KEY `player_match_performance_FK_1` (`team_id`)," +
+                            " CONSTRAINT `player_match_performance_FK` FOREIGN KEY (`match_id`) REFERENCES `match` (`id`) ON DELETE CASCADE ON UPDATE CASCADE," +
+                            " CONSTRAINT `player_match_performance_FK_1` FOREIGN KEY (`team_id`) REFERENCES `team` (`id`) ON DELETE CASCADE ON UPDATE CASCADE) " +
+                            "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
         }
     }
 
@@ -209,6 +223,12 @@ public class dbManager {
                 throw new DbException("Error while creating team_match_performance table", e);
             }
 
+            try {
+                statement.execute(Statement.PlayerMatchPerformance.CREATE_TABLE);
+            } catch (SQLException e) {
+                throw new DbException("Error while creating player_match_performance table", e);
+            }
+
         } catch (SQLException e) {
             throw new DbException("Error while connecting to the database", e);
         } catch (DbException e) {
@@ -217,7 +237,7 @@ public class dbManager {
 
     }
 
-    public void insertCityData() throws SQLException {
+    public void InsertCityData() throws SQLException {
         Connection connection = DbConnection.getConnection();
         PreparedStatement cityPs = connection.prepareStatement(
                 "INSERT INTO premire_league.city (id,name) VALUES" +
@@ -227,7 +247,7 @@ public class dbManager {
     }
 
 
-    public void insertCoachData() throws SQLException {
+    public void InsertCoachData() throws SQLException {
         Connection connection = DbConnection.getConnection();
         PreparedStatement cityPs = connection.prepareStatement(
                 "INSERT INTO premire_league.city (id,name) VALUES" +
@@ -236,7 +256,7 @@ public class dbManager {
                         "(4,'Tabriz'),");
     }
 
-    public void insertMatchData() throws SQLException {
+    public void InsertMatchData() throws SQLException {
         Connection connection = DbConnection.getConnection();
         PreparedStatement matchPs = connection.prepareStatement(
                 " INSERT INTO premire_league.`match` (id,team_home_id,team_away_id,`date`,stadium_id) VALUES" +
@@ -254,11 +274,11 @@ public class dbManager {
                         " (12,1,6,'2020-09-29 19:20:00',1);");
     }
 
-    public void insertPlayerData() throws SQLException {
+    public void InsertPlayerData() throws SQLException {
         Connection connection = DbConnection.getConnection();
         PreparedStatement playerPs = connection.prepareStatement(
-
-                "(1,4,'Hosein','Hoseni',30,'GK',3350000596,2500000)" +
+                "INSERT INTO premire_league.player (id,team_id,first_name,last_name,age,`position`,contract,salary) VALUES" +
+                        "(1,4,'Hosein','Hoseni',30,'GK',3350000596,2500000)" +
                         "(1,6,'Mohammad','Akhbari',30,'Gk',2900000000,2800000)," +
                         "(4,1,'Jalal','Hoseini',36,'CB',4600000000,3600000)," +
                         " (10,4,'Mehdi','Ghaiedi',22,'RWF',3980000000,2600000)," +
@@ -270,36 +290,33 @@ public class dbManager {
                         "(84,1,'Hamed','Lak',32,'GK',4000000000,4000000)," +
                         "(88,4,'Arash','Rezavand',25,'CMF',3000000000,3690000)," +
                         " (97,6,'Behzad','Salami',26,'CMF',1569000000,3400000);");
-
     }
 
-    public void insertStadiumData() throws SQLException {
+    public void InsertStadiumData() throws SQLException {
         Connection connection = DbConnection.getConnection();
         PreparedStatement stadiumPs = connection.prepareStatement(
                 "INSERT INTO premire_league.stadium(id, name, capacity)VALUES" +
                         "(1, 'Azadi', 78116)," +
                         " (2, 'Naghshe_jahan', 75000)," +
                         " (5, 'Yadehare_emam', 66833);");
-
-
     }
 
-    public void insertTeamsData() throws SQLException {
+    public void InsertTeamsData() throws SQLException {
         Connection connection = DbConnection.getConnection();
         PreparedStatement teamPs = connection.prepareStatement(
-                " (1,'Perspolis','Hoseini',1,17,1)," +
+                " INSERT INTO premire_league.team (id,name,captain,city_id,coach_id,stadium_id) VALUES" +
+                        " (1,'Perspolis','Hoseini',1,17,1)," +
                         " (2,'Sepahan','Hajsafi',2,18,2)," +
                         " (4,'Esteghlal','Ghafouri',1,20,1)," +
                         " (6,'Terakhtor','Akhbari',4,22,5);");
-
-
-
     }
 
-    public void insertTeamsMatchPerformanceData() throws SQLException {
+    public void InsertTeamsMatchPerformanceData() throws SQLException {
         Connection connection = DbConnection.getConnection();
         PreparedStatement tmp = connection.prepareStatement(
-                "     (1,1,2,0,3)," +
+                "INSERT INTO premire_league.team_match_performance " +
+                        "(team_id,match_id,scored_golas,recieved_goals,`point`) VALUES" +
+                        "     (1,1,2,0,3)," +
                         " (1,5,1,2,0)," +
                         " (1,6,3,2,3)," +
                         " (1,7,3,3,1)," +
@@ -323,26 +340,16 @@ public class dbManager {
                         "(6,9,1,0,0)," +
                         "(6,10,1,0,3)," +
                         "(6,12,1,2,0);");
-
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    public void InsertPlayerPerformanceData() throws SQLException {
+        Connection connection = DbConnection.getConnection();
+        PreparedStatement insertPlayerPerformancePs = connection.prepareStatement(
+                "INSERT INTO premire_league.player_match_performance " +
+                        " (player_id,match_id,team_id,scored_goals) VALUES" +
+                        "  (10,3,4,1)," +
+                        "(72,1,1,2);");
+    }
 
 
 }

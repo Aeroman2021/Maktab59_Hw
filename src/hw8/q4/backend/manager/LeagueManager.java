@@ -17,6 +17,7 @@ public class LeagueManager {
     private CoachTransferDao coachTransferDao;
     private PlayerTransferDao playerTransferDao;
     private TeamMtachPerformanceDao teamMtachPerformanceDao;
+    private PlayerMatchPerformance playerMatchPerformance;
     private String[] playerPositions = {"GK", "LB", "RB", "LB", "CB", "DMF", "RMF", "LMF",
             "RWF", "LWF", "SS", "CF"};
 
@@ -29,6 +30,7 @@ public class LeagueManager {
         this.coachTransferDao = new CoachTransferDao();
         this.playerTransferDao = new PlayerTransferDao();
         this.teamMtachPerformanceDao = new TeamMtachPerformanceDao();
+        this.playerMatchPerformance = new PlayerMatchPerformance();
     }
 
 
@@ -155,6 +157,10 @@ public class LeagueManager {
         teamMtachPerformanceDao.MostGoalDerbyMatch();
     }
 
+    public void PrintPlayersPerformanceInMatches() throws SQLException {
+        playerMatchPerformance.ReadPlayerPerformanceInMatch();
+    }
+
     private boolean PositionChecker(PlayerPosition position) {
         String playerPosition = String.valueOf(position);
         for (String ps : playerPositions) {
@@ -163,6 +169,8 @@ public class LeagueManager {
         }
         return false;
     }
+
+
 
 
 }

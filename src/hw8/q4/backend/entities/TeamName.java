@@ -1,0 +1,20 @@
+package hw8.q4.backend.entities;
+
+public enum TeamName {
+    PERSPOLIS,
+    ALUMINIUM_ARAK,
+    ESTEGHLAL,
+    PEIKAN,
+    TERAKHTOR,
+    ZOBAHAN,
+    SAIPA,SEPAHAN,
+    PADIDEH,
+    SANAT_NAFT_ABADAN,
+    FOOLAD_KHOOSETAN,
+    GOLGOHAR_SIRJAN,
+    MASHINSAZI_TABRIZ,
+    MES_RAFSANJAN,
+    NASAJI_MAZANDARAN,
+    NAFT_MASJEDSOLEIMAN
+
+}

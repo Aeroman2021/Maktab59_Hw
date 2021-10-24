@@ -1,43 +1,46 @@
 package Hw10.q1.frontend;
 
 
-import Hw10.q1.backend.entities.Prescription;
-import Hw10.q1.backend.entities.PrescriptionItems;
-import Hw10.q1.backend.entities.PrescriptionStore;
+import Hw10.q1.backend.dao.MedicineDao;
+import Hw10.q1.backend.dao.PrescriptionDao;
+import Hw10.q1.backend.entities.*;
 import Hw10.q1.backend.manager.Admin;
+import Hw10.q1.utility.UtilityMethods;
 import hw8.q4.backend.exceptions.ManagerException;
 
 import java.sql.SQLException;
-import java.util.InputMismatchException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
-public class UIManager<Patient> {
+public class UIManager {
 
     private Admin admin;
     private Scanner input;
     private static int select;
     private Patient patient;
-    private PrescriptionItems<Integer> newItem;
+    private PrescriptionItems newItem;
     private Prescription prescription;
-    private PrescriptionStore prescriptionStore;
+    private PrescriptionDao prescriptionDao;
+    private MedicineDao medicineDao;
+    private UtilityMethods utilityMethods;
+    private List<Patient> patientList;
+    private Store store;
+    private UiMenus pharmacyUiManager;
+    private UiMethods uiMethods;
 
 
     public UIManager() throws SQLException {
         admin = new Admin();
         input = new Scanner(System.in);
-        prescriptionStore = new PrescriptionStore();
+        prescriptionDao = new PrescriptionDao();
+        medicineDao = new MedicineDao();
+        utilityMethods = new UtilityMethods(admin);
+        patientList = new ArrayList<>();
+        pharmacyUiManager = new UiMenus();
+//        uiMethods = new UiMethods(utilityMethods, patient, prescription);
     }
 
-    public void showMenu() {
-        System.out.println();
-        System.out.println(">> Please choose A number from list bellow : ");
-        System.out.println();
-        System.out.println("1) Enter as user");
-        System.out.println("2) Enter as the administer");
-        System.out.println("3) exit");
-        System.out.println();
-
-    }
 
     public void Run() throws SQLException, ManagerException {
         System.out.println("====================================================================================");
@@ -45,144 +48,66 @@ public class UIManager<Patient> {
         System.out.println("====================================================================================");
 
         while (true) {
+            pharmacyUiManager.showTheMainMenu();
 
-
-            showMenu();
-            try {
-                select = input.nextInt();
-            } catch (InputMismatchException exception) {
-                exception.printStackTrace();
-                System.out.println(exception.getMessage());
-            }
+            select = input.nextInt();
 
             switch (select) {
 
                 case 1 -> {
-                    System.out.println("Please choose a number");
-                    System.out.println("1) Register");
-                    System.out.println("2) Enter your account");
+                    pharmacyUiManager.showPatientPrimaryMenu();
                     int choice = input.nextInt();
-
                     switch (choice) {
 
                         case 1 -> {
-                            System.out.println("Enter firstname");
-                            String firstName = input.next();
-                            System.out.println("Enter lastname");
-                            String lastName = input.next();
-                            System.out.println("Enter your age");
-                            int age = input.nextInt();
-                            System.out.println("Enter your sex ");
-                            String sex = input.next();
+                            Patient patient = utilityMethods.registerTheUser();
+                            admin.Register(patient);
+                        }
+
+                        case 2 -> {
                             System.out.println("Enter username");
                             String username = input.next();
                             System.out.println("Enter password");
                             String password = input.next();
 
-
-                            admin.Register(firstName, lastName, age, sex, username, password);
-                        }
-
-                        case 2 -> {
-                            System.out.println("Enter your username");
-                            String username = input.next();
-                            System.out.println("Enter your password");
-                            String password = input.next();
-
-                            if (!admin.UserPassValidator(username, password)) {
-                                throw new ManagerException("InvalidUserNameOrPassword");
-                            } else {
-                                System.out.println("Welcome" + admin.findPatientByUserAndPass(username, password).getFirstName());
-                                System.out.println();
-                                System.out.println("Please Choose Number");
-                                System.out.println("1) Insert your prescription");
-                                System.out.println("2) See the total cost of your prescription");
-                                System.out.println("3) Edit A prescription");
-                                System.out.println("4) Delete A prescription");
-                                System.out.println();
+                            if (utilityMethods.UserPassValidator(username, password)) {
+                                pharmacyUiManager.showPatientSecondaryMenu();
                                 choice = input.nextInt();
-
                                 switch (choice) {
-                                    case 1 -> {
-                                        int patientId = admin.patientIdFinder();
-                                        prescription = new Prescription();
-
-                                        int counter = 0;
-                                        boolean stopProcess = false;
-                                        while (counter < 10 || stopProcess) {
-                                            System.out.println("Enter the name of your medicine:");
-                                            String medicine = input.next();
-                                            System.out.println("Choose form of Medicine:");
-                                            System.out.println("1) Tablet");
-                                            System.out.println("2) liquid oral");
-                                            System.out.println("3) solid oral");
-                                            System.out.println("4) Injection");
-                                            int medicineForm = input.nextInt();
-                                            System.out.println("Enter the quantity of your medicine:");
-                                            int medicineQuantity = input.nextInt();
-                                            newItem = new PrescriptionItems(medicine, medicineQuantity, medicineForm, null);
-                                            prescription.addItemsToPrescription(newItem);
-
-                                            System.out.println("Do you want to insert more medicine?");
-                                            System.out.println("1) yes, 2)No");
-                                            choice = input.nextInt();
-                                            if (choice == 2) {
-                                                stopProcess = true;
-                                            } else
-                                                counter++;
-                                        }
-
-                                        admin.setPrescriptionToThePatient(patientId, prescription);
-                                        prescriptionStore.addPrescriptionToStore(patientId, prescription);
-                                        admin.addPrescriptionToPrescriptionStoreDao(patientId, prescription);
-                                    }
-
-                                    case 2 -> {
-
-
-                                    }
-
-                                    case 3 -> {
-                                        System.out.println(">> Enter your id");
-                                        int id = input.nextInt();
-                                        System.out.println(">> Enter the number of prescription you want to edit:");
-                                        int prescriptionNumber = input.nextInt();
-                                        Prescription prescription = admin.FindPatientById(id).getPrescriptionList().get(prescriptionNumber);
-                                        System.out.println("Enter the id of the item you want to edit");
-                                        int itemNumber = input.nextInt();
-                                        System.out.println("select which one you want to edit");
-                                        System.out.println("1)item | 2)form | 3)quantity");
-
-                                        prescription.updatePrescriptionItems(itemNumber,);
-
-
-                                    }
-
-                                    case 4 -> {
-                                        System.out.println(">> Enter your id");
-                                        int id = input.nextInt();
-                                        System.out.println(">> Enter the number of prescription you want to delete:");
-                                        int inputNumber = input.nextInt();
-                                        Prescription prescription = admin.FindPatientById(id).getPrescriptionList().get(inputNumber);
-                                        prescription.removePrescriptionItems(inputNumber);
-                                    }
-
-
+//                                    case 1 -> uiMethods.insertPrescriptionByPatient(username, password);
+                                    case 2 -> uiMethods.printPrescriptionForPatient(username, password);
+                                    case 3 -> uiMethods.updateItemByPatient(username, password);
+                                    case 4 -> uiMethods.deleteItemByPatient();
+                                    case 5 -> uiMethods.deletePrescriptionByPatient(username, password);
+                                    case 6 -> System.exit(0);
                                 }
-
-                            }
-
+                            } else
+                                throw new ManagerException("InvalidUserNameOrPassword");
                         }
-
-
                     }
-
-
                 }
 
-
                 case 2 -> {
+                    System.out.println("Enter your username");
+                    String username = input.next();
+                    System.out.println("Enter your password");
+                    String password = input.next();
 
+                    if (utilityMethods.adminValidator(username, password)) {
+                        pharmacyUiManager.showAdminMenu();
+                        int choice = input.nextInt();
+
+                        while (true) {
+                            switch (choice) {
+                                case 1 -> prescriptionDao.getAll();
+                                case 2 -> medicineDao.getAll();
+                                case 3 -> uiMethods.updateMedicineListInStoreByAdmin();
+                                case 4 -> uiMethods.updatePrescriptionListByAdmin();
+                                case 5 -> System.exit(0);
+                            }
+                        }
+                    } else
+                        throw new ManagerException("Invalid username and password");
                 }
 
                 case 3 -> {
@@ -192,6 +117,5 @@ public class UIManager<Patient> {
                 }
             }
         }
-
     }
 }

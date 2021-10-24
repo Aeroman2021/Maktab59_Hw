@@ -1,21 +1,32 @@
 package Hw10.q1.backend.entities;
 
 
-public class Medicine<T extends Number> extends Item<String,Integer,Double> {
-    private T id;
+public class Medicine extends Item {
+    private Integer id;
 
-    public Medicine(T id,String name, Integer form, Double cost) {
-        super(name, form, cost);
+    public Medicine(Integer id, String name, Integer form, Double price, Integer quantity, Boolean doesExist) {
+        super(name, form, price, doesExist, quantity);
         this.id = id;
     }
 
-
-    public T getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(T id) {
+    public void setId(Integer id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "Medicine{" +
+                "id=" + id +
+                '}';
+    }
 }
+
+
+
+
+
 

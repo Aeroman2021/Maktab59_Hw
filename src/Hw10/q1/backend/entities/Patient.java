@@ -1,32 +1,31 @@
 package Hw10.q1.backend.entities;
-
-import java.util.ArrayList;
+import Hw10.q1.utility.CRUDMethods;
 import java.util.HashMap;
-import java.util.List;
 
-public class Patient{
+public class Patient implements CRUDMethods<Prescription> {
 
-    private int id = 10;
+    private Integer id;
     private String firstName;
     private String lastName;
     private String sex;
-    private int age;
+    private Integer age;
     private String username;
     private String password;
-    private int prescriptionIndex;
+    private static int prescriptionIndex;
     private HashMap<Integer, Prescription> prescriptionList;
 
-    public Patient(String firstName, String lastName, String sex, int age, String username, String password) {
+    public Patient(Integer id, String firstName, String lastName, String sex, Integer age, String username, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.sex = sex;
         this.age = age;
         this.username = username;
         this.password = password;
-        this.prescriptionList = new HashMap<>(3);
-        this.id += 1;
-        this.prescriptionIndex=0;
+        this.id = id;
+        prescriptionIndex =1;
+        prescriptionList = new HashMap<>();
     }
+
 
     public int getId() {
         return id;
@@ -61,11 +60,26 @@ public class Patient{
         return prescriptionList;
     }
 
-    public void AddPrescriptionToPrescriptionList(Prescription prescription) {
-        prescriptionList.put(prescriptionIndex++,prescription);
+    public int getPrescriptionIndex() {
+        return prescriptionIndex;
     }
 
+    @Override
+    public void save(Prescription prescription) {
+        prescriptionList.put(prescriptionIndex++, prescription);
+    }
 
+    @Override
+    public String toString() {
+        return "Patient{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", sex='" + sex + '\'' +
+                ", age=" + age +
+                '}';
+    }
 
+    public void printPrescription(){}
 
 }

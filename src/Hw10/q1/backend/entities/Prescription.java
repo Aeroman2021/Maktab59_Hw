@@ -1,37 +1,46 @@
 package Hw10.q1.backend.entities;
 
+import Hw10.q1.utility.CRUDMethods;
+
 import java.util.HashMap;
 
-public class Prescription {
 
-    private int Id = 100;
+public class Prescription implements CRUDMethods<PrescriptionItems> {
+
+    private Integer patientId;
+    private Integer prescriptionId;
     private HashMap<Integer, PrescriptionItems> itemList;
-    private int itemIndex;
+    private Integer itemIndex;
 
-
-    public Prescription() {
-        itemList = new HashMap<>();
-        this.Id += 2;
+    public Prescription(int patientId, int prescriptionId, HashMap<Integer,PrescriptionItems> itemList) {
+        this.patientId = patientId;
+        this.prescriptionId = prescriptionId;
+        this.itemList=itemList;
     }
 
-    public void addItemsToPrescription(PrescriptionItems item) {
-        itemList.put(itemIndex++, item);
+    public Prescription() {
+
+    }
+
+    public int getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(int patientId) {
+        this.patientId = patientId;
+    }
+
+    @Override
+    public void save(PrescriptionItems newItem) {
+        itemList.put(itemIndex++, newItem);
     }
 
     public HashMap<Integer, PrescriptionItems> getItemList() {
         return itemList;
     }
 
-    public void removePrescriptionItems(int key) {
-        itemList.remove(key);
-    }
-
-    public void updatePrescriptionItems(int key) {
-        PrescriptionItems<Integer> ps = itemList.get(key);
-
-        ps.setName();
-        ps.setForm();
-        ps.setQuantity();
-
+    @Override
+    public void deleteByIndex(Integer index) {
+        itemList.remove(index);
     }
 }

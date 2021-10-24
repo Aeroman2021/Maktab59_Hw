@@ -1,150 +1,113 @@
 package Hw10.q1.backend.manager;
 
+import Hw10.q1.backend.dao.MedicineDao;
 import Hw10.q1.backend.dao.PatientDao;
-import Hw10.q1.backend.dao.PrescriptionStoreDao;
-import Hw10.q1.backend.entities.*;
+import Hw10.q1.backend.dao.PrescriptionDao;
+import Hw10.q1.backend.entities.Medicine;
+import Hw10.q1.backend.entities.Patient;
+import Hw10.q1.backend.entities.PrescriptionItems;
+import Hw10.q1.backend.entities.Store;
+import Hw10.q1.utility.CRUDMethods;
+import hw8.q4.backend.exceptions.ManagerException;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class Admin {
 
     private List<Patient> patientList;
     private PatientDao patientDao;
-    private PrescriptionStoreDao prescriptionStoreDao;
     private Store store;
-    private  Medicine<Integer> medicine;
+    private Medicine medicine;
     private PrescriptionItems prescriptionItems;
+    private PrescriptionDao prescriptionDao;
+    //    private UtilityMethods utilityMethods;
+    private MedicineDao medicineDao;
 
 
     public Admin() {
         patientDao = new PatientDao();
-        prescriptionStoreDao = new PrescriptionStoreDao();
         patientList = new ArrayList<>();
-        store = new Store();
-        medicine = new Medicine();
+        medicine = new Medicine(null, null, null, null, null, null);
+        prescriptionDao = new PrescriptionDao();
+//        utilityMethods = new UtilityMethods();
+        medicineDao = new MedicineDao();
     }
 
+    public List<Patient> getPatientList() {
+        return patientList;
+    }
 
-    public void Register(String firstName, String lastName, int age, String sex,
-                         String username, String password) {
-
-        Patient patient = new Patient(firstName, lastName, sex, age, username, password);
-        patientList.add(patient);
+    public void Register(Patient patient) {
 
         try {
-            patientDao.addPatientInformation(patient.getId(), firstName, lastName, age, sex);
-
+            patientDao.save(patient);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Error while adding the patient to the database");
         }
-
     }
 
-    public void addPrescriptionToPrescriptionStoreDao(int id, Prescription prescription) {
-        prescriptionStoreDao.AddPreProcessPrescription();
-    }
-
-    public void setPrescriptionToThePatient(int patientId, Prescription prescription) {
-        Patient patient = FindPatientById(patientId);
-        patient.AddPrescriptionToPrescriptionList(prescription);
-    }
-
-
-    public boolean UserPassValidator(String username, String password) {
-        for (Patient patient : patientList) {
-            if (patient.getUsername().equals(username) && patient.getPassword().equals(password))
-                return true;
+    public void addPresItemsToPrescriptionDao(int patientId, int prescriptionId, PrescriptionItems prescriptionItems) {
+        try {
+            prescriptionDao.savePrescriptionItem(prescriptionItems, patientId, prescriptionId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error while adding items to the database.");
         }
-        return false;
     }
 
-    public int patientIdFinder() {
-        Scanner scanner = new Scanner("System.in");
-        System.out.println("Enter your firstname:");
-        String name = scanner.next();
-        System.out.println("Enter your lastName: ");
-        String lastName = scanner.next();
-
-        for (Patient patient : patientList) {
-            if (patient.getFirstName().equals(name) && patient.getLastName().equals(lastName))
-                return patient.getId();
+    public void updateItemsAtStore(String name, int form, double itemPrice, int quantity, boolean isExist) {
+        try {
+            medicineDao.updatePrescriptionItems(name, form, itemPrice, quantity, isExist);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error while updating items to the database.");
         }
-        return -1;
     }
 
-    private double CheckPriceMedicineAtStore(String medicineName, String medicineForm) {
-        if (CheckMedicineAvailabilityAtStore(medicineName, medicineForm)) {
-            if (store.getMedicineQuantities().get(medicine.getId()) > 0)
-                return (double) medicine.getCost();
+    public void printPrescriptionForPatient(int patientId, int prescriptionId) {
+        try {
+            prescriptionDao.showListOfPrescriptionForPatient(patientId, prescriptionId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Unable to show the prescription list");
         }
-        return -1;
     }
 
-    private boolean CheckMedicineAvailabilityAtStore(String medicineName, String medicineForm) {
-        for (int i = 0; i < store.getMedicineList().size(); i++) {
-            Medicine<Integer> medicine = store.getMedicineList().get(i);
-            if (medicine.getName().equals(medicineName) && medicine.getForm().equals(medicineForm))
-                return true;
+    public void updateMedicineByUser(int medId,int medForm, int medQuantity) {
+        try {
+            prescriptionDao.updatePrescriptionItemsByPatient(medId,medForm, medQuantity);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("An error occurred while updating the medicine item ");
         }
-        return false;
     }
 
-    public void updateMedicineQuantity(String medicineName, int medicineForm, int quantity) {
-        int medId = findMedicine(medicineName, medicineForm);
-        int medQuantity = store.getMedicineQuantities().get(medId);
-        medQuantity -= quantity;
-        store.getMedicineQuantities().replace(medId, medQuantity);
+
+    public void updateMedicineQuantityInStore(PrescriptionItems item) throws SQLException, ManagerException {
+        if (!medicineDao.findMedicineByNameAndForm(item.getName(), item.getForm()))
+            throw new ManagerException("The medicine is not exist");
+        else
+            medicineDao.updateMedicineQuantity(item.getName(), item.getQuantity(), item.getForm());
     }
 
-    public int findMedicine(String medicineName, int medicineForm) {
-        for (int i = 0; i < store.getMedicineList().size(); i++) {
-            Medicine<Integer> medicine = store.getMedicineList().get(i);
-            if (medicine.getName().equals(medicineName) && medicine.getForm().equals(medicineForm))
-                return medicine.getId();
+    public void deleteMedicineByUser(int medId) {
+        try {
+            prescriptionDao.deleteByIndex(medId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("An error occurred while deleting the medicine item ");
         }
-        return -1;
     }
 
-    public Patient FindPatientById(int id) {
-        for (Patient patient : patientList) {
-            if (patient.getId() == id)
-                return patient;
+    public void deletePrescriptionByUser(int patientId,int PrescriptionId){
+        try {
+            prescriptionDao.deletePrescByUser(patientId,PrescriptionId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("An error occurred while deleting the prescription ");
         }
-        return null;
     }
-
-    public Patient findPatientByUserAndPass(String username, String password) {
-        for (Patient patient : patientList) {
-            if (patient.getUsername().equals(username) && patient.getPassword().equals(password))
-                return patient;
-        }
-        return null;
-    }
-
-    public void updateMedicineQuantityByPrescription(Prescription prescription){
-        for (int i = 0; i < prescription.getItemList().size() ; i++) {
-            PrescriptionItems<Integer> currentPrescriptionItems = prescription.getItemList().get(i);
-            int itemQuantity = currentPrescriptionItems.getQuantity();
-            currentPrescriptionItems.getName();
-            currentPrescriptionItems.getForm();
-
-            updateMedicineQuantity()
-
-        }
-
-
-
-
-
-
-    }
-
-
-
-
-
 
 }

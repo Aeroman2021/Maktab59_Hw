@@ -1,19 +1,25 @@
 package Hw10.q1.backend.entities;
 
-public class PrescriptionItems<T extends Number> extends Item<String,Integer,Double>  {
-    private T quantity;
+public class PrescriptionItems extends Item {
+    private Boolean doesConfirmed;
+    private Integer itemId;
 
-    public PrescriptionItems(String name, Integer form,T quantity, Double cost) {
-        super(name, form, cost);
-        this.quantity = quantity;
+    public PrescriptionItems(Integer itemId,String name, Integer form, Double price, Boolean doesExist, Integer quantity,Boolean doesConfirmed) {
+        super(name, form, price, doesExist, quantity);
+        this.doesConfirmed = doesConfirmed;
+        this.itemId = itemId;
     }
 
-
-    public T getQuantity() {
-        return quantity;
+    public Boolean getDoesConfirmed() {
+        return doesConfirmed;
     }
 
-    public void setQuantity(T quantity) {
-        this.quantity = quantity;
+    public void setDoesConfirmed(Boolean doesConfirmed) {
+        this.doesConfirmed = doesConfirmed;
     }
+
+    public Integer getItemId() {
+        return itemId;
+    }
+
 }

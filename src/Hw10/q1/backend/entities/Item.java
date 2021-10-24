@@ -1,37 +1,69 @@
 package Hw10.q1.backend.entities;
 
-public class Item <E,T extends Number,S extends Number>{
-    private E name;
-    private T form;
-    private S cost;
+public class Item {
 
-    public Item(E name, T form, S cost) {
+    private String name;
+    private Integer form;
+    private Double price;
+    private Boolean doesExist;
+    private Integer quantity;
+
+    public Item(String name, Integer form, Double price, Boolean doesExist, Integer quantity) {
         this.name = name;
         this.form = form;
-        this.cost = cost;
+        this.price = price;
+        this.doesExist = doesExist;
+        this.quantity = quantity;
     }
 
-    public E getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(E name) {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public T getForm() {
+    public Integer getForm() {
         return form;
     }
 
-    public void setForm(T form) {
+    public void setForm(Integer form) {
         this.form = form;
     }
 
-    public S getCost() {
-        return cost;
+    public Double getPrice() {
+        return price;
     }
 
-    public void setCost(S cost) {
-        this.cost = cost;
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public Boolean getDoesExist() {
+        return doesExist;
+    }
+
+    public void setDoesExist(Boolean doesExist) {
+        this.doesExist = doesExist;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "name='" + name + '\'' +
+                ", form=" + form +
+                ", price=" + price +
+                ", doesExist=" + doesExist +
+                ", quantity=" + quantity +
+                '}';
     }
 }

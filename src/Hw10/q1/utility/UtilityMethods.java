@@ -74,26 +74,26 @@ public class UtilityMethods {
         return null;
     }
 
-    public void prescriptionCostAndIsExistUpdater(int patientId, int prescriptionId) throws SQLException {
-
-        Patient patient = FindPatientById(patientId);
-        HashMap<Integer, Prescription> prescriptionList = patient.getPrescriptionList();
-        Prescription prescription = prescriptionList.get(prescriptionId);
-        HashMap<Integer, PrescriptionItems> itemList = prescription.getItemList();
-
-        for (int i = 0; i < itemList.size(); i++) {
-            PrescriptionItems prescriptionItems = itemList.get(i);
-            String name = prescriptionItems.getName();
-            Integer form = prescriptionItems.getForm();
-            Medicine foundMedicine = findMedicineByNameAndForm(name, form);
-            Double price = foundMedicine.getPrice();
-            Boolean doesExist = foundMedicine.getDoesExist();
-
-            prescriptionDao.updatePrescriptionItemsByAdmin(prescriptionId, patientId, price, doesExist);
-            prescriptionItems.setDoesExist(doesExist);
-            prescriptionItems.setPrice(price);
-        }
-    }
+//    public void prescriptionCostAndIsExistUpdater(int patientId, int prescriptionId) throws SQLException {
+//
+//        Patient patient = FindPatientById(patientId);
+//        HashMap<Integer, Prescription> prescriptionList = patient.getPrescriptionList();
+//        Prescription prescription = prescriptionList.get(prescriptionId);
+//        HashMap<Integer, PrescriptionItems> itemList = prescription.getItemList();
+//
+//        for (int i = 0; i < itemList.size(); i++) {
+//            PrescriptionItems prescriptionItems = itemList.get(i);
+//            String name = prescriptionItems.getName();
+//            Integer form = prescriptionItems.getForm();
+//            Medicine foundMedicine = findMedicineByNameAndForm(name, form);
+//            Double price = foundMedicine.getPrice();
+//            Boolean doesExist = foundMedicine.getDoesExist();
+//
+//            prescriptionDao.updatePrescriptionItemsByAdmin(prescriptionId, patientId, price, doesExist);
+//            prescriptionItems.setDoesExist(doesExist);
+//            prescriptionItems.setPrice(price);
+//        }
+//    }
 
     public static int idGenerator() {
         int upperBound = 999;

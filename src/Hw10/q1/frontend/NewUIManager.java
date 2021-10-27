@@ -21,7 +21,6 @@ public class NewUIManager {
     public void showMainMenu() throws ManagerException, SQLException {
         boolean isExit = false;
         while (!isExit) {
-
             System.out.println("*** PHARMACY MANAGEMENT SYSTEM ***");
             System.out.println("""
                             --- Select your role:  ---
@@ -34,27 +33,27 @@ public class NewUIManager {
                 case 1 -> showPatientPrimaryMenu();
                 case 2 -> showAdminPrimaryMenu();
                 case 3 -> isExit = true;
-                default -> {
-                }
+                default -> System.out.println("Please enter a number in range between 1-3");
             }
         }
-
     }
 
     private void showPatientPrimaryMenu() throws ManagerException, SQLException {
-        System.out.println(
-                """
-                        Please select number\040
-                        1) register an account
-                        2) Login to your account
-                        3) Exit to the main menu
-                        """);
-        int option = Input.getInputValue("");
-        switch (option) {
-            case 1 -> registerAPatient();
-            case 2 -> patientLogin();
-            case 3 -> showMainMenu();
-            default -> {
+        boolean isExit = false;
+        while (!isExit) {
+            System.out.println(
+                    """
+                            Please select number\040
+                            1) register an account
+                            2) Login to your account
+                            3) Exit to the main menu
+                            """);
+            int option = Input.getInputValue("");
+            switch (option) {
+                case 1 -> registerAPatient();
+                case 2 -> patientLogin();
+                case 3 -> isExit = true;
+                default -> System.out.println("Please enter a number in range between 1-3");
             }
         }
     }
@@ -82,40 +81,44 @@ public class NewUIManager {
     }
 
     public void showPatientSecondaryMenu(String username, String password) throws ManagerException, SQLException {
-        System.out.println("""
-                Please Choose a Number
-                1) Insert your prescription
-                2) See the total cost of your prescription
-                3) Edit an item in prescription
-                4) Delete an item in prescription
-                5) Delete A prescription
-                6) Exit to the previous Menu
-                """);
-
-        int option = Input.getInputValue("");
-        switch (option) {
-            case 1 -> uiMethods.addPrescriptionByPatient(username, password);
-            case 2 -> uiMethods.printPrescriptionForPatient(username, password);
-            case 3 -> uiMethods.updateItemByPatient(username, password);
-            case 4 -> uiMethods.deleteItemByPatient();
-            case 5 -> uiMethods.deletePrescriptionByPatient(username, password);
-            case 6 -> showPatientPrimaryMenu();
-            default -> System.out.println("Please enter a number in range between 1-6");
+        boolean isExit = false;
+        while (!isExit) {
+            System.out.println("""
+                    Please Choose a Number
+                    1) Insert your prescription
+                    2) See the total cost of your prescription
+                    3) Edit an item in prescription
+                    4) Delete an item in prescription
+                    5) Delete A prescription
+                    6) Exit to the previous Menu
+                    """);
+            int option = Input.getInputValue("");
+            switch (option) {
+                case 1 -> uiMethods.addPrescriptionByPatient(username, password);
+                case 2 -> uiMethods.printPrescriptionForPatient(username, password);
+                case 3 -> uiMethods.updateItemByPatient(username, password);
+                case 4 -> uiMethods.deleteItemByPatient();
+                case 5 -> uiMethods.deletePrescriptionByPatient(username, password);
+                case 6 -> isExit = true;
+                default -> System.out.println("Please enter a number in range between 1-6");
+            }
         }
     }
 
     private void showAdminPrimaryMenu() throws ManagerException, SQLException {
-        System.out.println("""
-                Please Choose a Number
-                1) Login to your account
-                2) Exit to the Main Menu
-                """);
-        int option = Input.getInputValue("");
-        switch (option) {
-            case 1 -> adminLogin();
-            case 2 -> showMainMenu();
-            default -> System.out.println("Please enter a number in range between 1-6");
-
+        boolean isExit = false;
+        while (!isExit) {
+            System.out.println("""
+                    Please Choose a Number
+                    1) Login to your account
+                    2) Exit to the Main Menu
+                    """);
+            int option = Input.getInputValue("");
+            switch (option) {
+                case 1 -> adminLogin();
+                case 2 -> isExit = true;
+                default -> System.out.println("Please enter a number in range between 1-2");
+            }
         }
     }
 
@@ -129,24 +132,32 @@ public class NewUIManager {
     }
 
     private void showAdminSecondaryMenu() throws SQLException, ManagerException {
-        System.out.println("""
-                        Select a number please:\040
-                        1) Print list of prescription
-                        2) Print list of medicines in store");
-                        3) Update the list of medicines in store");
-                        4) Update the list of prescriptions");
-                        5) Exit to the previous menu");
-                """);
+        boolean isExit = false;
+        while (!isExit) {
+            System.out.println("""
+                            Select a number please:\040
+                            1) Print list of prescription
+                            2) Print list of medicines in store
+                            3) Update the list of medicines in store
+                            4) Update the exist and confirm of medicine
+                            5) Advanced Update (insert patientId and prescId)
+                            6) Print total cost of each prescription (insert patientId and prescId)
+                            7) Exit to the previous menu
+                            8) Exit
+                    """);
 
-        int option = Input.getInputValue("");
-        switch (option) {
-            case 1 -> prescriptionDao.getAll();
-            case 2 -> medicineDao.getAll();
-            case 3 -> uiMethods.updateMedicineListInStoreByAdmin();
-            case 4 -> uiMethods.updatePrescriptionListByAdmin();
-            case 5 -> showAdminPrimaryMenu();
-            default -> System.out.println("Please enter a number in range between 1-6");
-
+            int option = Input.getInputValue("");
+            switch (option) {
+                case 1 -> prescriptionDao.getAll();
+                case 2 -> medicineDao.getAll();
+                case 3 -> uiMethods.updateMedicineListInStoreByAdmin();
+                case 4 -> uiMethods.prescriptionItemChecker();
+                case 5 -> uiMethods.updatePrescriptionListByAdmin();
+                case 6 -> uiMethods.advancedPrescItemByAdmin();
+                case 7 -> uiMethods.printTotalPriceOfThePrescription();
+                case 8 -> isExit = true;
+                default -> System.out.println("Please enter a number in range between 1-8");
+            }
         }
     }
 

@@ -14,9 +14,4 @@ public interface CRUDMethods<T> {
      default <V,U> void savePrescriptionItem(T t, V v,U u) throws SQLException {}
 
 
-
-
-
-
-
 }

@@ -34,5 +34,29 @@ public class Input {
             }
     }
 
+    public static double getDoubleValue(String msg) {
+        while (true){
+            try {
+                return Double.parseDouble(getStringInputValue(msg));
+            } catch (Exception e) {
+                Printer.printErrorMessage("Invalid input");
+                if (msg.isEmpty())
+                    System.out.println("> ");
+            }
+        }
+    }
+
+    public static boolean getBooleanValue(String msg) {
+        while (true){
+            try {
+                Boolean.parseBoolean(getStringInputValue(msg));
+            } catch (Exception e) {
+                Printer.printErrorMessage("Invalid input");
+                if (msg.isEmpty())
+                    System.out.println("> ");
+            }
+        }
+    }
+
 
 }

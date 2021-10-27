@@ -1,5 +1,6 @@
 package Hw10.q1.frontend;
 
+import Hw10.q1.backend.dao.PrescriptionDao;
 import Hw10.q1.backend.entities.Patient;
 import Hw10.q1.backend.entities.Prescription;
 import Hw10.q1.backend.entities.PrescriptionItems;
@@ -11,25 +12,24 @@ import hw8.q4.backend.exceptions.ManagerException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Scanner;
 
 public class UiMethods {
 
     Scanner input = new Scanner(System.in);
-    private Admin admin;
+    private Admin admin = new Admin();
     private UtilityMethods utilityMethods = new UtilityMethods(admin);
     private ArrayList<Patient> patientList;
     private UiMenus pharmacyUiManager;
     private Prescription prescription;
     private Patient patient = new Patient(null, null, null, null, null, null, null);
+    private PrescriptionDao prescriptionDao;
 
     public UiMethods() {
         pharmacyUiManager = new UiMenus();
-        admin = new Admin();
         patientList = new ArrayList<>();
         prescription = new Prescription();
-
+        prescriptionDao = new PrescriptionDao();
     }
 
     public void addPrescriptionByPatient(String username, String password) throws SQLException, ManagerException {
@@ -96,30 +96,24 @@ public class UiMethods {
     }
 
     public void updateMedicineListInStoreByAdmin() {
-        System.out.println("Enter the name of your medicine:");
-        String itemName = input.next();
-        System.out.println("Choose form of Medicine:");
-        System.out.println("1) Tablet");
-        System.out.println("2) liquid oral");
-        System.out.println("3) solid oral");
-        System.out.println("4) Injection");
-        int itemForm = input.nextInt();
-        System.out.println("Enter the quantity of your medicine:");
-        int quantity = input.nextInt();
-        System.out.println("Enter the price of each unit");
-        double price = input.nextDouble();
+        int itemId = Input.getInputValue("Enter the id of the medicine:");
+        int quantity =  Input.getInputValue("Enter the new quantity of the medicine ");
+        double price = Input.getInputValue("Enter the new price for each unit of medicine");
         System.out.println("Enter the exist status");
         boolean isExist = input.nextBoolean();
-        admin.updateItemsAtStore(itemName, itemForm, price, quantity, isExist);
+
+        admin.updateItemsAtStore(itemId,price, quantity, isExist);
     }
 
     public void updatePrescriptionListByAdmin() throws SQLException {
-        System.out.println("Enter patientId");
-        int patientId = input.nextInt();
-        System.out.println("Enter prescriptionId");
-        int prescriptionId = input.nextInt();
+        int itemId =  Input.getInputValue("Enter item id");
+        double itemPrice = Input.getDoubleValue("Enter item's price");
+        System.out.println("Does this item exist in store?");
+        Boolean doesExist = input.nextBoolean();
+        System.out.println("Do you want to confirm this item?");
+        Boolean doesConfirmed = input.nextBoolean();
 
-        utilityMethods.prescriptionCostAndIsExistUpdater(patientId, prescriptionId);
+        admin.updatePrescriptionByAdmin(itemId,itemPrice,doesExist,doesConfirmed);
     }
 
     private boolean isAbleToAddPrescription(Patient patient) {
@@ -150,6 +144,27 @@ public class UiMethods {
             }
         }
         return false;
+    }
+
+    public  void advancedPrescItemByAdmin(){
+        int patientId = Input.getInputValue("Enter patientId");
+        int prescriptionID= Input.getInputValue("Enter PrescriptionId");
+        admin.advancedItemUpdator(patientId,prescriptionID);
+    }
+
+    public void printTotalPriceOfThePrescription(){
+        int patientId = Input.getInputValue("Enter patientId");
+        int prescriptionID= Input.getInputValue("Enter PrescriptionId");
+        admin.printThePrescriptionTotalPrice(patientId,prescriptionID);
+    }
+
+    public void prescriptionItemChecker() throws SQLException {
+        int patientId = Input.getInputValue("Enter patient id");
+        int prescriptionId = Input.getInputValue("Enter prescription id");
+        ArrayList<PrescriptionItems> prescriptionItems =
+                prescriptionDao.getAPrescriptionBYPatientID(patientId, prescriptionId);
+        admin.isExistAndIsConfirmedUpdater(prescriptionItems,patientId);
+
     }
 
 }

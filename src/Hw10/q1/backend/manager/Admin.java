@@ -7,7 +7,6 @@ import Hw10.q1.backend.entities.Medicine;
 import Hw10.q1.backend.entities.Patient;
 import Hw10.q1.backend.entities.PrescriptionItems;
 import Hw10.q1.backend.entities.Store;
-import Hw10.q1.utility.CRUDMethods;
 import hw8.q4.backend.exceptions.ManagerException;
 
 import java.sql.SQLException;
@@ -40,7 +39,6 @@ public class Admin {
     }
 
     public void Register(Patient patient) {
-
         try {
             patientDao.save(patient);
         } catch (SQLException e) {
@@ -57,12 +55,12 @@ public class Admin {
         }
     }
 
-    public void updateItemsAtStore(String name, int form, double itemPrice, int quantity, boolean isExist) {
+    public void updateItemsAtStore(int id,double itemPrice, int quantity, boolean isExist) {
         try {
-            medicineDao.updatePrescriptionItems(name, form, itemPrice, quantity, isExist);
+            medicineDao.updateMedicineItemsAtStoreByAdmin(id,itemPrice, quantity, isExist);
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error while updating items to the database.");
+            System.out.println("Error while updating medicine ");
         }
     }
 
@@ -107,6 +105,46 @@ public class Admin {
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("An error occurred while deleting the prescription ");
+        }
+    }
+
+    public void updatePrescriptionByAdmin(int itemId,double itemPrice,boolean doesExist,boolean isConfirmed){
+        try {
+            prescriptionDao.updatePrescriptionItemsByAdmin(itemId,itemPrice,doesExist,isConfirmed);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("An error occurred while updating the prescription ");
+        }
+    }
+
+    public void advancedItemUpdator(int patientId,int prescriptionID){
+        try {
+            prescriptionDao.advancedUpdater(patientId,prescriptionID);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public  void printThePrescriptionTotalPrice(int patientId,int prescriptionID){
+
+        try {
+            prescriptionDao.printThePrescriptionCost(patientId,prescriptionID);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void isExistAndIsConfirmedUpdater(ArrayList<PrescriptionItems> prescriptionItemList,int patientId){
+        for(PrescriptionItems ps : prescriptionItemList){
+            String name = ps.getName();
+            Integer form = ps.getForm();
+            try {
+                if(medicineDao.getMedicineItemByNameAndForm(name,form))
+                    prescriptionDao.confirmTheItemByAdmin(patientId,ps);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -27,22 +27,4 @@ public class PatientDao implements CRUDMethods<Patient> {
         if (preparedStatement.execute())
             System.out.println("The User added to the database successfully.");
     }
-
-
-
-    @Override
-    public void getAll() throws SQLException {
-
-    }
-
-
-    @Override
-    public void update(Patient patient) throws SQLException {
-
-    }
-
-    @Override
-    public void delete(Patient patient) {
-
-    }
 }

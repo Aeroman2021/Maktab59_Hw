@@ -15,50 +15,50 @@ public class MedicineDao implements CRUDMethods<Medicine> {
         return baseMedQuantity;
     }
 
-    public void updatePrescriptionItems(String name, int form, double itemPrice, int quantity, boolean isExist) throws SQLException {
-        String UPDATE_PRESCRIPTION_ITEMS = "UPDATE medicine.pharmacy_management_system SET " +
-                "name=?, form=?, price=?, quantity=?, is_exist=? " +
-                "WHERE id=? ";
+    public void updateMedicineItemsAtStoreByAdmin(int id, double itemPrice, int quantity, boolean isExist) throws SQLException {
+        String UPDATE_MEDICINE_ITEMS_AT_STORE_BY_ADMIN = "UPDATE pharmacy_management_system.medicine SET " +
+                " price=?, quantity=?, is_exist=? WHERE id=? ";
         Connection connection = DbConnection.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PRESCRIPTION_ITEMS);
-        preparedStatement.setString(1, name);
-        preparedStatement.setInt(2, form);
-        preparedStatement.setDouble(3, itemPrice);
-        preparedStatement.setInt(4, quantity);
-        preparedStatement.setBoolean(5, isExist);
+        PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_MEDICINE_ITEMS_AT_STORE_BY_ADMIN);
+        preparedStatement.setDouble(1, itemPrice);
+        preparedStatement.setInt(2, quantity);
+        preparedStatement.setBoolean(3, isExist);
+        preparedStatement.setInt(4, id);
+        if (preparedStatement.executeUpdate() == 1)
+            System.out.println("The item updated successfully");
+        else
+            System.out.println("Unable to update the item");
     }
-
 
     @Override
     public void getAll() throws SQLException {
         String PRINT_LIST_OF_MEDICINES = "SELECT id,name,form,price,quantity,is_exist FROM " +
-                "pharmacy_management_system.medicine";
+                " pharmacy_management_system.medicine";
 
         Connection connection = DbConnection.getConnection();
         PreparedStatement ps = connection.prepareStatement(PRINT_LIST_OF_MEDICINES);
         ResultSet rs = ps.executeQuery();
 
         StringBuilder result = new StringBuilder();
-        System.out.println("==========================================================================================");
-        System.out.println("============================List of all submitted prescription============================");
+        System.out.println("                            List of available Medicine                                    ");
         System.out.println("==========================================================================================");
         result.append("| ");
-        result.append(Constant.formatter("id"));
+        result.append(Constant.idFormatter("id"));
         result.append(Constant.COLUMN_SEPARATOR);
-        result.append(Constant.formatter("name"));
+        result.append(Constant.nameFormatter("name"));
         result.append(Constant.COLUMN_SEPARATOR);
-        result.append(Constant.formatter("form"));
+        result.append(Constant.formFormatter("form"));
         result.append(Constant.COLUMN_SEPARATOR);
-        result.append(Constant.formatter("price"));
+        result.append(Constant.priceFormatter("price"));
         result.append(Constant.COLUMN_SEPARATOR);
-        result.append(Constant.formatter("quantity"));
+        result.append(Constant.quantityFormatter("quantity"));
         result.append(Constant.COLUMN_SEPARATOR);
-        result.append(Constant.formatter("is_exist"));
-        result.append("|");
+        result.append(Constant.isExistFormatter("is_exist"));
+        result.append(" |");
 
         System.out.println(result.toString());
-        System.out.println("__________________________________________________________________________________________");
 
+        System.out.println("==========================================================================================");
         while (rs.next()) {
             int id = rs.getInt("id");
             String item = rs.getString("name");
@@ -66,8 +66,9 @@ public class MedicineDao implements CRUDMethods<Medicine> {
             double price = rs.getDouble("price");
             int quantity = rs.getInt("quantity");
             boolean isExist = rs.getBoolean("is_exist");
-            System.out.println(id + " | " + item + " | " + form + " | " + price + " | " + quantity + " | " + isExist);
+            System.out.println(id + "   | " + item + " | " + form + " | " + price + " | " + quantity + " | " + isExist);
         }
+        System.out.println();
     }
 
 
@@ -86,6 +87,11 @@ public class MedicineDao implements CRUDMethods<Medicine> {
         preparedStatement.setInt(4, medicine.getQuantity());
         preparedStatement.setBoolean(5, medicine.getDoesExist());
         preparedStatement.setInt(6, medicine.getId());
+
+        if (preparedStatement.executeUpdate() == 1)
+            System.out.println("The item updated successfully");
+        else
+            System.out.println("Unable to update the item");
     }
 
     public void updateMedicineQuantity(String medicineName, int soldQuantity, int form) throws SQLException {
@@ -98,6 +104,11 @@ public class MedicineDao implements CRUDMethods<Medicine> {
         preparedStatement.setInt(1, baseMedicineQuantity - soldQuantity);
         preparedStatement.setString(2, medicineName);
         preparedStatement.setInt(3, form);
+
+        if (preparedStatement.executeUpdate() == 1)
+            System.out.println("The item updated successfully");
+        else
+            System.out.println("Unable to update the item");
     }
 
     private Integer findMedicineQuantity(String medname, int medForm) throws SQLException {
@@ -125,6 +136,19 @@ public class MedicineDao implements CRUDMethods<Medicine> {
 
         return (rs.next());
 
+    }
+
+
+    public boolean getMedicineItemByNameAndForm(String name, int form) throws SQLException {
+        String PRINT_THE_MEDICINES = "SELECT id FROM " +
+                " pharmacy_management_system.medicine where name=? and form=?";
+        Connection connection = DbConnection.getConnection();
+        PreparedStatement ps = connection.prepareStatement(PRINT_THE_MEDICINES);
+        ps.setString(1,name);
+        ps.setInt(2,form);
+        ResultSet rs = ps.executeQuery();
+
+        return (rs.next());
     }
 
 

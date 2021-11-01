@@ -1,10 +1,8 @@
 package Hw10.q1.frontend;
-
-import Hw10.q1.backend.Exception.ServiceExeption;
+import Hw10.q1.backend.Exception.DbException;
+import Hw10.q1.backend.Exception.ManagerException;
+import Hw10.q1.backend.Exception.ServiceException;
 import Hw10.q1.backend.database.DbManager;
-import hw8.q4.backend.exceptions.DbException;
-import hw8.q4.backend.exceptions.ManagerException;
-
 import java.sql.SQLException;
 
 public class UI {
@@ -17,7 +15,7 @@ public class UI {
             dbManager.initPharmacyStore();
             NewUIManager uiManager = new NewUIManager();
             uiManager.showMainMenu();
-        } catch (SQLException | DbException | ServiceExeption | ManagerException e) {
+        } catch (SQLException | DbException | ServiceException | ManagerException e) {
             e.printStackTrace();
         }
 

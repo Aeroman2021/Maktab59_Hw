@@ -1,9 +1,10 @@
 package Hw10.q1.backend.database;
 
-import Hw10.q1.backend.Exception.ServiceExeption;
+import Hw10.q1.backend.Exception.DbException;
+import Hw10.q1.backend.Exception.ServiceException;
 import Hw10.q1.backend.entities.Medicine;
-import hw8.q4.backend.db.DbConnection;
-import hw8.q4.backend.exceptions.DbException;
+//import hw8.q4.backend.db.DbConnection;
+//import hw8.q4.backend.exceptions.DbException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -73,31 +74,31 @@ public class DbManager {
             try {
                 statement.execute(Statement.Schema.CREATE);
             } catch (SQLException e) {
-                throw new DbException("Error while creating Scheme", e);
+                throw new DbException("Error while creating Scheme");
             }
 
             try {
                 statement.execute(Statement.Medicine.CREATE_TABLE);
             } catch (SQLException e) {
-                throw new DbException("Error while creating medicine table", e);
+                throw new DbException("Error while creating medicine table");
 
             }
 
             try {
                 statement.execute(Statement.Patient.CREATE_TABLE);
             } catch (SQLException e) {
-                throw new DbException("Error while creating patient table", e);
+                throw new DbException("Error while creating patient table");
             }
 
             try {
                 statement.execute(Statement.Prescription.CREATE_TABLE);
             } catch (SQLException e) {
-                throw new DbException("Error while creating prescription table", e);
+                throw new DbException("Error while creating prescription table");
             }
 
 
         } catch (SQLException e) {
-            throw new DbException("Error while connecting to the database", e);
+            throw new DbException("Error while connecting to the database");
         } catch (DbException e) {
             throw e;
         }
@@ -120,11 +121,11 @@ public class DbManager {
             statement.execute();
 
         } catch (SQLException e) {
-            throw new DbException("Error while inserting medicine: " + medicine.getName(), e);
+            throw new DbException("Error while inserting medicine: " + medicine.getName());
         }
     }
 
-    public void initPharmacyStore() throws ServiceExeption, DbException {
+    public void initPharmacyStore() throws ServiceException, DbException {
         Medicine lidocaineOral = new Medicine(1, "lidocaine", 1, 20000d, 50, true);
         insertMedicine(lidocaineOral);
         Medicine lidocaineSolidOral = new Medicine(2, "lidocaine", 2, 25000d, 40, true);
@@ -174,7 +175,7 @@ public class DbManager {
             statement.execute();
 
         } catch (SQLException e) {
-            throw new DbException("Error while truncating medicine table ", e);
+            throw new DbException("Error while truncating medicine table ");
         }
     }
 

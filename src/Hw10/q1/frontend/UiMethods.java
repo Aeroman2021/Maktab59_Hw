@@ -1,5 +1,6 @@
 package Hw10.q1.frontend;
 
+import Hw10.q1.backend.Exception.ManagerException;
 import Hw10.q1.backend.dao.PatientDao;
 import Hw10.q1.backend.dao.PrescriptionDao;
 import Hw10.q1.backend.entities.Patient;
@@ -8,8 +9,6 @@ import Hw10.q1.backend.entities.PrescriptionItems;
 import Hw10.q1.backend.manager.Admin;
 import Hw10.q1.utility.Input;
 import Hw10.q1.utility.UtilityMethods;
-import hw8.q4.backend.exceptions.ManagerException;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;

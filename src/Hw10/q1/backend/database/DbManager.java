@@ -67,9 +67,9 @@ public class DbManager {
     }
 
     public void initializeDatabase() throws SQLException, DbException {
+
         try (Connection connection = getConnection();
              java.sql.Statement statement = connection.createStatement()) {
-
             try {
                 statement.execute(Statement.Schema.CREATE);
             } catch (SQLException e) {
@@ -163,9 +163,6 @@ public class DbManager {
 
     public  void resettable() throws DbException {
         resetMedicineTable();
-        resetPrescriptionTable();
-        resetPatientTable();
-
     }
 
     private void resetMedicineTable() throws DbException {
@@ -180,38 +177,5 @@ public class DbManager {
             throw new DbException("Error while truncating medicine table ", e);
         }
     }
-    private void resetPatientTable() throws DbException {
-        String TRUNCATE_PATIENT_TABLE = " TRUNCATE pharmacy_management_system.medicine ";
-
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(TRUNCATE_PATIENT_TABLE)) {
-
-            statement.execute();
-
-        } catch (SQLException e) {
-            throw new DbException("Error while truncating patient table" , e);
-        }
-    }
-
-    private void resetPrescriptionTable() throws DbException {
-        String TRUNCATE_PRESCRIPTION_TABLE = " TRUNCATE pharmacy_management_system.medicine ";
-
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(TRUNCATE_PRESCRIPTION_TABLE)) {
-
-            statement.execute();
-
-        } catch (SQLException e) {
-            throw new DbException("Error while truncating prescription table" , e);
-        }
-    }
-
-
-
-
-
-
-
-
 
 }

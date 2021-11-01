@@ -1,6 +1,5 @@
 package Hw10.q1.backend.dao;
 
-import Hw10.q1.backend.entities.Prescription;
 import Hw10.q1.backend.entities.PrescriptionItems;
 import Hw10.q1.utility.Constant;
 import Hw10.q1.utility.CRUDMethods;
@@ -65,8 +64,8 @@ public class PrescriptionDao implements CRUDMethods<PrescriptionItems> {
             System.out.println("Error while updating the item.");
     }
 
-    public void showListOfPrescriptionForPatient(int patientId, int prescriptionId) throws SQLException {
-        String PRINT_LIST_OF_PRESCRIPTION = "SELECT item , form, (quantity * price * is_exist) as 'price', is_confirmed " +
+    public void printListOfPrescriptionForPatient(int patientId, int prescriptionId) throws SQLException {
+        String PRINT_LIST_OF_PRESCRIPTION = "SELECT item_id, item , form, (quantity * price * is_exist) as 'price', is_confirmed " +
                 " FROM pharmacy_management_system.prescription WHERE prescription_id=? AND patient_id=? ";
 
         Connection connection = DbConnection.getConnection();
@@ -76,9 +75,11 @@ public class PrescriptionDao implements CRUDMethods<PrescriptionItems> {
         ResultSet rs = preparedStatement.executeQuery();
 
         StringBuilder result = new StringBuilder();
-        System.out.println("                          List of all submitted prescription                              ");
+        System.out.println("                          List of all submitted items                                     ");
         System.out.println("==========================================================================================");
         result.append("| ");
+        result.append(Constant.idFormatter("item_id"));
+        result.append(Constant.COLUMN_SEPARATOR);
         result.append(Constant.idFormatter("item"));
         result.append(Constant.COLUMN_SEPARATOR);
         result.append(Constant.formFormatter("form"));
@@ -86,14 +87,16 @@ public class PrescriptionDao implements CRUDMethods<PrescriptionItems> {
         result.append(Constant.priceFormatter("price"));
         result.append(Constant.COLUMN_SEPARATOR);
         result.append("|");
+
+        System.out.println(result.toString());
         System.out.println("==========================================================================================");
 
         while (rs.next()) {
+            int itemId = rs.getInt("item_id");
             String item = rs.getString("item");
             int form = rs.getInt("form");
             double price = rs.getDouble("price");
-
-            System.out.println(item + " | " + form + " | " + price);
+            System.out.println(itemId + " | " + item + " | " + form + " | " + price);
         }
         System.out.println();
     }
@@ -142,14 +145,14 @@ public class PrescriptionDao implements CRUDMethods<PrescriptionItems> {
     }
 
 
-    public ArrayList<PrescriptionItems> getAPrescriptionBYPatientID(int patientID,int prescriptionId) throws SQLException {
+    public ArrayList<PrescriptionItems> getAPrescriptionBYPatientID(int patientID, int prescriptionId) throws SQLException {
         ArrayList<PrescriptionItems> prescriptionItemList = new ArrayList<>();
         String PRINT_LIST_OF_PRESCRIPTION = "SELECT item_id, item, form, quantity, price " +
                 " FROM pharmacy_management_system.prescription where patient_id=? and prescription_id=? ";
         Connection connection = DbConnection.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(PRINT_LIST_OF_PRESCRIPTION);
-        preparedStatement.setInt(1,patientID);
-        preparedStatement.setInt(2,prescriptionId);
+        preparedStatement.setInt(1, patientID);
+        preparedStatement.setInt(2, prescriptionId);
         ResultSet rs = preparedStatement.executeQuery();
         PrescriptionItems prescriptionItems;
 
@@ -162,9 +165,7 @@ public class PrescriptionDao implements CRUDMethods<PrescriptionItems> {
                     quantity, null);
             prescriptionItemList.add(prescriptionItems);
         }
-
         return prescriptionItemList;
-
     }
 
 
@@ -175,7 +176,6 @@ public class PrescriptionDao implements CRUDMethods<PrescriptionItems> {
         PreparedStatement preparedStatement = connection.prepareStatement(DELETE_THE_MEDICINE_BY_PATIENT);
         preparedStatement.setInt(1, index);
         preparedStatement.executeUpdate();
-
     }
 
     public void deletePrescByUser(int patientId, int prescriptionId) throws SQLException {
@@ -242,11 +242,9 @@ public class PrescriptionDao implements CRUDMethods<PrescriptionItems> {
             System.out.println(patientId + "   | " + prescriptionID + " | " + item + " | " + form + " | " + quantity +
                     " | " + unitPrice + " | " + totalPrice + " | " + isExist + " | " + isConfirmed);
         }
-
     }
 
     public void printThePrescriptionCost(int patientId, int prescriptionID) throws SQLException {
-
         String PRINT_PRESCRIPTION_TOTAL_PRICE = " select p.patient_id, p.prescription_id ,p.is_confirmed ," +
                 " sum(p.price * p.quantity) as 'total_price' " +
                 " from pharmacy_management_system.prescription p  where p.patient_id = ? and prescription_id =?";
@@ -282,14 +280,14 @@ public class PrescriptionDao implements CRUDMethods<PrescriptionItems> {
     }
 
 
-    public void confirmTheItemByAdmin(int patientId,PrescriptionItems prescriptionItems) throws SQLException {
+    public void confirmTheItemByAdmin(int patientId, PrescriptionItems items) throws SQLException {
         String UPDATE_ISEXIST_AND_ISCONFIRMED_STATUS_OF_ITEMS_BY_ADMIN = " UPDATE pharmacy_management_system.prescription " +
                 " SET  is_exist=1, is_confirmed=1 WHERE item=? and form=? and patient_id=? ;";
 
         Connection connection = DbConnection.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ISEXIST_AND_ISCONFIRMED_STATUS_OF_ITEMS_BY_ADMIN);
-        preparedStatement.setString(1, prescriptionItems.getName());
-        preparedStatement.setInt(2, prescriptionItems.getForm());
+        preparedStatement.setString(1, items.getName());
+        preparedStatement.setInt(2, items.getForm());
         preparedStatement.setInt(3, patientId);
 
         if (preparedStatement.executeUpdate() == 1)
@@ -297,6 +295,7 @@ public class PrescriptionDao implements CRUDMethods<PrescriptionItems> {
         else
             System.out.println("Error while updating the item.");
     }
+
 
 
 }

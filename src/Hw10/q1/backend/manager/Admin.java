@@ -21,16 +21,14 @@ public class Admin {
     private Medicine medicine;
     private PrescriptionItems prescriptionItems;
     private PrescriptionDao prescriptionDao;
-    //    private UtilityMethods utilityMethods;
     private MedicineDao medicineDao;
 
 
     public Admin() {
         patientDao = new PatientDao();
         patientList = new ArrayList<>();
-        medicine = new Medicine(null, null, null, null, null, null);
+        medicine = new Medicine();
         prescriptionDao = new PrescriptionDao();
-//        utilityMethods = new UtilityMethods();
         medicineDao = new MedicineDao();
     }
 
@@ -66,7 +64,7 @@ public class Admin {
 
     public void printPrescriptionForPatient(int patientId, int prescriptionId) {
         try {
-            prescriptionDao.showListOfPrescriptionForPatient(patientId, prescriptionId);
+            prescriptionDao.printListOfPrescriptionForPatient(patientId, prescriptionId);
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Unable to show the prescription list");
@@ -84,7 +82,7 @@ public class Admin {
 
 
     public void updateMedicineQuantityInStore(PrescriptionItems item) throws SQLException, ManagerException {
-        if (!medicineDao.findMedicineByNameAndForm(item.getName(), item.getForm()))
+        if (medicineDao.findMedicineItemByNameAndForm(item.getName(), item.getForm())==null)
             throw new ManagerException("The medicine is not exist");
         else
             medicineDao.updateMedicineQuantity(item.getName(), item.getQuantity(), item.getForm());
@@ -117,7 +115,7 @@ public class Admin {
         }
     }
 
-    public void advancedItemUpdator(int patientId,int prescriptionID){
+    public void advancedItemUpdater(int patientId, int prescriptionID){
         try {
             prescriptionDao.advancedUpdater(patientId,prescriptionID);
         } catch (SQLException e) {
@@ -140,7 +138,7 @@ public class Admin {
             String name = ps.getName();
             Integer form = ps.getForm();
             try {
-                if(medicineDao.getMedicineItemByNameAndForm(name,form))
+                if(medicineDao.findMedicineItemByNameAndForm(name,form)!= null)
                     prescriptionDao.confirmTheItemByAdmin(patientId,ps);
             } catch (SQLException e) {
                 e.printStackTrace();

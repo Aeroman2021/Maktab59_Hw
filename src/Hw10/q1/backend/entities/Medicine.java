@@ -9,6 +9,9 @@ public class Medicine extends Item {
         this.id = id;
     }
 
+    public Medicine( ) {
+    }
+
     public Integer getId() {
         return id;
     }

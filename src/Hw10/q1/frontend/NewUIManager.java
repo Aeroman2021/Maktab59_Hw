@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class NewUIManager {
+
     private Admin admin = new Admin();
     private UiMethods uiMethods = new UiMethods();
     private static ArrayList<Integer> idStore = new ArrayList<>();
@@ -86,20 +87,22 @@ public class NewUIManager {
             System.out.println("""
                     Please Choose a Number
                     1) Insert your prescription
-                    2) See the total cost of your prescription
-                    3) Edit an item in prescription
-                    4) Delete an item in prescription
-                    5) Delete A prescription
-                    6) Exit to the previous Menu
+                    2) Print the the detail of confirmed prescription
+                    3) Print the total cost of your prescription
+                    4) Edit an item in prescription
+                    5) Delete an item in prescription
+                    6) Delete A prescription
+                    7) Exit to the previous Menu
                     """);
             int option = Input.getInputValue("");
             switch (option) {
                 case 1 -> uiMethods.addPrescriptionByPatient(username, password);
                 case 2 -> uiMethods.printPrescriptionForPatient(username, password);
-                case 3 -> uiMethods.updateItemByPatient(username, password);
-                case 4 -> uiMethods.deleteItemByPatient();
-                case 5 -> uiMethods.deletePrescriptionByPatient(username, password);
-                case 6 -> isExit = true;
+                case 3 -> uiMethods.printTotalCostOfThePrescriptionForPatient(username,password);
+                case 4 -> uiMethods.updateItemByPatient(username, password);
+                case 5 -> uiMethods.deleteItemByPatient();
+                case 6 -> uiMethods.deletePrescriptionByPatient(username, password);
+                case 7 -> isExit = true;
                 default -> System.out.println("Please enter a number in range between 1-6");
             }
         }
@@ -131,7 +134,7 @@ public class NewUIManager {
             throw new ManagerException("Invalid username or password");
     }
 
-    private void showAdminSecondaryMenu() throws SQLException, ManagerException {
+    private void showAdminSecondaryMenu() throws SQLException {
         boolean isExit = false;
         while (!isExit) {
             System.out.println("""
@@ -139,11 +142,12 @@ public class NewUIManager {
                             1) Print list of prescription
                             2) Print list of medicines in store
                             3) Update the list of medicines in store
-                            4) Update the exist and confirm of medicine
-                            5) Advanced Update (insert patientId and prescId)
-                            6) Print total cost of each prescription (insert patientId and prescId)
-                            7) Exit to the previous menu
-                            8) Exit
+                            4) Update the is_exist and is_confirmed status of medicine
+                            5) Update The price of items in prescription
+                            6) Advanced Update (insert patientId and prescId)
+                            7) Calculate total cost of each prescription (insert patientId and prescId)
+                            8) Set total cost of each prescription 
+                            9) Exit
                     """);
 
             int option = Input.getInputValue("");
@@ -153,9 +157,10 @@ public class NewUIManager {
                 case 3 -> uiMethods.updateMedicineListInStoreByAdmin();
                 case 4 -> uiMethods.prescriptionItemChecker();
                 case 5 -> uiMethods.updatePrescriptionListByAdmin();
-                case 6 -> uiMethods.advancedPrescItemByAdmin();
-                case 7 -> uiMethods.printTotalPriceOfThePrescription();
-                case 8 -> isExit = true;
+                case 6 -> uiMethods.advancedPrescItemUpdateByAdmin();
+                case 7 -> uiMethods.printTotalPriceOfThePrescriptionForAdmin();
+                case 8 -> uiMethods.setPriceOfPrescription();
+                case 9 -> isExit = true;
                 default -> System.out.println("Please enter a number in range between 1-8");
             }
         }

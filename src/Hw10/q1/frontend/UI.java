@@ -15,8 +15,6 @@ public class UI {
             dbManager.resettable();
             dbManager.initializeDatabase();
             dbManager.initPharmacyStore();
-//            UIManager manager = new UIManager();
-//            manager.Run();
             NewUIManager uiManager = new NewUIManager();
             uiManager.showMainMenu();
         } catch (SQLException | DbException | ServiceExeption | ManagerException e) {

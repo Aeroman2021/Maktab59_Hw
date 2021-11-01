@@ -3,17 +3,19 @@ package Hw10.q1.backend.dao;
 import Hw10.q1.backend.entities.Medicine;
 import Hw10.q1.utility.Constant;
 import Hw10.q1.utility.CRUDMethods;
+import hw8.q4.backend.exceptions.ManagerException;
 import hw8.q4.backend.utilities.DbConnection;
 
 import java.sql.*;
 
 public class MedicineDao implements CRUDMethods<Medicine> {
+    private int medicineId;
+    private int initialMedicineQuantity;
 
-    private int baseMedQuantity = 0;
 
-    public int getBaseMedQuantity() {
-        return baseMedQuantity;
-    }
+
+
+
 
     public void updateMedicineItemsAtStoreByAdmin(int id, double itemPrice, int quantity, boolean isExist) throws SQLException {
         String UPDATE_MEDICINE_ITEMS_AT_STORE_BY_ADMIN = "UPDATE pharmacy_management_system.medicine SET " +
@@ -94,16 +96,22 @@ public class MedicineDao implements CRUDMethods<Medicine> {
             System.out.println("Unable to update the item");
     }
 
-    public void updateMedicineQuantity(String medicineName, int soldQuantity, int form) throws SQLException {
+    public void updateMedicineQuantity(String name, int soldQuantity, int form) throws SQLException, ManagerException {
         String UPDATE_PRESCRIPTION_ITEMS = "UPDATE pharmacy_management_system.medicine " +
-                "SET quantity=? WHERE name=? AND form=?";
+                "SET quantity=? WHERE id=?";
         Connection connection = DbConnection.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PRESCRIPTION_ITEMS);
 
-        Integer baseMedicineQuantity = findMedicineQuantity(medicineName, form);
-        preparedStatement.setInt(1, baseMedicineQuantity - soldQuantity);
-        preparedStatement.setString(2, medicineName);
-        preparedStatement.setInt(3, form);
+        Integer medicineQuantity = findMedicineQuantity(name, form);
+        Integer foundMedId = findMedicineItemByNameAndForm(name, form);
+        int updatedMedicineQuantity = medicineQuantity - soldQuantity;
+
+        if(updatedMedicineQuantity >= 0 ){
+            preparedStatement.setInt(1, updatedMedicineQuantity);
+            preparedStatement.setInt(2, foundMedId);
+        }else
+            throw new ManagerException("Not enough medicine exist");
+
 
         if (preparedStatement.executeUpdate() == 1)
             System.out.println("The item updated successfully");
@@ -111,35 +119,25 @@ public class MedicineDao implements CRUDMethods<Medicine> {
             System.out.println("Unable to update the item");
     }
 
-    private Integer findMedicineQuantity(String medname, int medForm) throws SQLException {
+    private Integer findMedicineQuantity(String name, int form) throws SQLException {
         String PRINT_QUANTITY_OF_SOLD_MEDICINES = "SELECT quantity FROM " +
-                "pharmacy_management_system.medicine WHERE name=? AND form=?";
+                "pharmacy_management_system.medicine WHERE id=?";
         Connection connection = DbConnection.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(PRINT_QUANTITY_OF_SOLD_MEDICINES);
-        preparedStatement.setString(1, medname);
-        preparedStatement.setInt(2, medForm);
-        ResultSet rs = preparedStatement.executeQuery();
-        if (rs.next())
-            baseMedQuantity = rs.getInt("quantity");
-
-        return baseMedQuantity;
-    }
-
-    public boolean findMedicineByNameAndForm(String medName, int medForm) throws SQLException {
-        String FIND_MED_BY_NAME_AND_FORM = "SELECT quantity FROM " +
-                "pharmacy_management_system.medicine WHERE name=? AND form=?";
-        Connection connection = DbConnection.getConnection();
-        PreparedStatement ps = connection.prepareStatement(FIND_MED_BY_NAME_AND_FORM);
-        ps.setString(1, medName);
-        ps.setInt(2, medForm);
-        ResultSet rs = ps.executeQuery();
-
-        return (rs.next());
-
+        if(findMedicineItemByNameAndForm(name,form)!= null){
+            Integer medId = findMedicineItemByNameAndForm(name,form);
+            PreparedStatement preparedStatement = connection.prepareStatement(PRINT_QUANTITY_OF_SOLD_MEDICINES);
+            preparedStatement.setInt(1, medId);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                initialMedicineQuantity = rs.getInt("quantity");
+            }
+            return initialMedicineQuantity;
+        }
+        return null;
     }
 
 
-    public boolean getMedicineItemByNameAndForm(String name, int form) throws SQLException {
+    public Integer findMedicineItemByNameAndForm(String name, int form) throws SQLException {
         String PRINT_THE_MEDICINES = "SELECT id FROM " +
                 " pharmacy_management_system.medicine where name=? and form=?";
         Connection connection = DbConnection.getConnection();
@@ -148,8 +146,9 @@ public class MedicineDao implements CRUDMethods<Medicine> {
         ps.setInt(2,form);
         ResultSet rs = ps.executeQuery();
 
-        return (rs.next());
+        while (rs.next()){
+            medicineId = rs.getInt("id");
+        }
+        return medicineId;
     }
-
-
 }

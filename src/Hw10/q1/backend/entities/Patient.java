@@ -12,6 +12,10 @@ public class Patient implements CRUDMethods<Prescription> {
     private String username;
     private String password;
     private static int prescriptionIndex;
+    private Integer prescCounter;
+    private Integer prescOneTotalCost;
+    private Integer prescTwoTotalCost;
+    private Integer prescThreeTotalCost;
     private HashMap<Integer, Prescription> prescriptionList;
 
     public Patient(Integer id, String firstName, String lastName, String sex, Integer age, String username, String password) {
@@ -26,6 +30,22 @@ public class Patient implements CRUDMethods<Prescription> {
         prescriptionList = new HashMap<>();
     }
 
+    public Patient(Integer id, String firstName, String lastName, String sex, Integer age, Integer prescCounter,
+                   Integer prescOneTotalCost,Integer prescTwoTotalCost,Integer prescThreeTotalCost) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.sex = sex;
+        this.age = age;
+        this.id = id;
+        prescriptionList = new HashMap<>();
+        this.prescCounter = prescCounter;
+        this.prescOneTotalCost = prescOneTotalCost;
+        this.prescTwoTotalCost = prescTwoTotalCost;
+        this.prescThreeTotalCost = prescThreeTotalCost;
+    }
+
+
+    public Patient(){}
 
     public int getId() {
         return id;

@@ -3,10 +3,8 @@ package Hw10.q1.backend.manager;
 import Hw10.q1.backend.dao.MedicineDao;
 import Hw10.q1.backend.dao.PatientDao;
 import Hw10.q1.backend.dao.PrescriptionDao;
-import Hw10.q1.backend.entities.Medicine;
 import Hw10.q1.backend.entities.Patient;
 import Hw10.q1.backend.entities.PrescriptionItems;
-import Hw10.q1.backend.entities.Store;
 import hw8.q4.backend.exceptions.ManagerException;
 
 import java.sql.SQLException;
@@ -17,9 +15,6 @@ public class Admin {
 
     private List<Patient> patientList;
     private PatientDao patientDao;
-    private Store store;
-    private Medicine medicine;
-    private PrescriptionItems prescriptionItems;
     private PrescriptionDao prescriptionDao;
     private MedicineDao medicineDao;
 
@@ -27,7 +22,6 @@ public class Admin {
     public Admin() {
         patientDao = new PatientDao();
         patientList = new ArrayList<>();
-        medicine = new Medicine();
         prescriptionDao = new PrescriptionDao();
         medicineDao = new MedicineDao();
     }

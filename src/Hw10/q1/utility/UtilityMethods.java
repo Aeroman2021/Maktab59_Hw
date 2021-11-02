@@ -15,7 +15,6 @@ public class UtilityMethods {
 
     private Admin admin;
     private Medicine medicine;
-    private Store store;
     private Prescription prescription;
     private PrescriptionItems prescriptionItems;
     private PrescriptionDao prescriptionDao;
@@ -59,42 +58,6 @@ public class UtilityMethods {
         return null;
     }
 
-
-
-    public boolean adminValidator(String username, String password) {
-        return (username.equals("admin") && password.equals("admin"));
-    }
-
-    public Medicine findMedicineByNameAndForm(String medicineName, int medicineForm) {
-        for (int i = 0; i < store.getMedicineList().size(); i++) {
-            Medicine medicine = store.getMedicineList().get(i);
-            if (medicine.getName().equalsIgnoreCase(medicineName) && medicine.getForm() == medicineForm)
-                return medicine;
-        }
-        return null;
-    }
-
-//    public void prescriptionCostAndIsExistUpdater(int patientId, int prescriptionId) throws SQLException {
-//
-//        Patient patient = FindPatientById(patientId);
-//        HashMap<Integer, Prescription> prescriptionList = patient.getPrescriptionList();
-//        Prescription prescription = prescriptionList.get(prescriptionId);
-//        HashMap<Integer, PrescriptionItems> itemList = prescription.getItemList();
-//
-//        for (int i = 0; i < itemList.size(); i++) {
-//            PrescriptionItems prescriptionItems = itemList.get(i);
-//            String name = prescriptionItems.getName();
-//            Integer form = prescriptionItems.getForm();
-//            Medicine foundMedicine = findMedicineByNameAndForm(name, form);
-//            Double price = foundMedicine.getPrice();
-//            Boolean doesExist = foundMedicine.getDoesExist();
-//
-//            prescriptionDao.updatePrescriptionItemsByAdmin(prescriptionId, patientId, price, doesExist);
-//            prescriptionItems.setDoesExist(doesExist);
-//            prescriptionItems.setPrice(price);
-//        }
-//    }
-
     public static int idGenerator() {
         int upperBound = 999;
         int lowerBound = 100;
@@ -115,30 +78,6 @@ public class UtilityMethods {
             return id;
         } else itemIdGenerator();
         return id;
-    }
-
-
-
-    public  Patient registerTheUser(){
-        System.out.println("Enter firstname");
-        String firstName = input.next();
-        System.out.println("Enter lastname");
-        String lastName = input.next();
-        System.out.println("Enter your age");
-        int age = input.nextInt();
-        System.out.println("Enter your sex ");
-        String sex = input.next();
-        System.out.println("Enter username");
-        String username = input.next();
-        System.out.println("Enter password");
-        String password = input.next();
-        int patientId = UtilityMethods.idGenerator();
-
-        Patient newPatient = new Patient(patientId,firstName,lastName,sex,age,username,password);
-        patientList.add(newPatient);
-
-        return newPatient;
-
     }
 
 }

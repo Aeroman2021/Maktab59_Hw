@@ -3,8 +3,6 @@ package Hw10.q1.backend.database;
 import Hw10.q1.backend.Exception.DbException;
 import Hw10.q1.backend.Exception.ServiceException;
 import Hw10.q1.backend.entities.Medicine;
-//import hw8.q4.backend.db.DbConnection;
-//import hw8.q4.backend.exceptions.DbException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -17,7 +15,6 @@ public class DbManager {
         }
 
         private static class Prescription {
-
             private static String CREATE_TABLE =
                     "create table if not exists pharmacy_management_system.prescription (" +
                             "id smallint not null," +
@@ -39,6 +36,9 @@ public class DbManager {
                             "`last_name` varchar(10) NOT NULL," +
                             "`sex` varchar(7) NOT NULL," +
                             " `age` smallint(6) NOT NULL," +
+                            "`username` mediumtext NOT NULL," +
+                            "`password` mediumtext NOT NULL," +
+                            "`prescription_counter` int(11) DEFAULT 1," +
                             "`presc_id_1_total_cost` double DEFAULT NULL," +
                             "`presc_id_2_total_cost` double DEFAULT NULL," +
                             "`presc_id_3_total_cost` double DEFAULT NULL," +
@@ -111,12 +111,12 @@ public class DbManager {
                 " VALUES(?, ?, ?, ?,?,?);";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_MEDICINE)) {
-            statement.setInt(1,medicine.getId());
-            statement.setString(2,medicine.getName());
-            statement.setInt(3,medicine.getForm());
-            statement.setDouble(4,medicine.getPrice());
-            statement.setInt(5,medicine.getQuantity());
-            statement.setBoolean(6,medicine.getDoesExist());
+            statement.setInt(1, medicine.getId());
+            statement.setString(2, medicine.getName());
+            statement.setInt(3, medicine.getForm());
+            statement.setDouble(4, medicine.getPrice());
+            statement.setInt(5, medicine.getQuantity());
+            statement.setBoolean(6, medicine.getDoesExist());
 
             statement.execute();
 
@@ -162,7 +162,7 @@ public class DbManager {
         insertMedicine(midazolamOralSolid);
     }
 
-    public  void resettable() throws DbException {
+    public void resettable() throws DbException {
         resetMedicineTable();
     }
 

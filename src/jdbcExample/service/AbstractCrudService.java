@@ -4,8 +4,8 @@ import jdbcExample.dao.core.BaseDao;
 import jdbcExample.entity.base.BaseEntity;
 
 public class AbstractCrudService<T extends BaseEntity<ID>,ID extends Number> {
-    private BaseDao<T, ID> baseDao;
 
+    private BaseDao<T, ID> baseDao;
     public void setBaseDao(BaseDao<T, ID> baseDao) {
         this.baseDao = baseDao;
     }
@@ -22,11 +22,15 @@ public class AbstractCrudService<T extends BaseEntity<ID>,ID extends Number> {
         }
     }
 
+    public void save(T entity){
+        baseDao.save(entity);
+    }
+
     public void deleteById(ID id){
         baseDao.delete(id);
     }
 
-    public void loadByid(ID id){
+    public void loadById(ID id){
         baseDao.loadById(id);
     }
 

@@ -17,40 +17,33 @@ import java.util.List;
 public class StudentDao implements BaseDao<Student, Integer> {
 
     private final DataSourceConfig dataSourceConfig = DataSourceConfig.getInstance();
-    private Connection connection;
 
     @Override
     public void save(Student entity) {
-        try (Connection connection = dataSourceConfig.createDataSource().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement("INSERT INTO Student " +
-                    "(name, family_name, m_id_fk) " +
-                    "VALUES(?, ?, ?)")) {
-                ps.setString(1, entity.getName());
-                ps.setString(2, entity.getFamilyName());
-                ps.setInt(3, entity.getMajor().getId());
-                ps.executeUpdate();
-            }
+        try (Connection connection = dataSourceConfig.createDataSource().getConnection();
+             PreparedStatement ps = connection.prepareStatement("INSERT INTO student " +
+                     " (id, name, last_name, major_id) VALUES(?,?, ?, ?)")) {
+            ps.setInt(1, entity.getId());
+            ps.setString(2, entity.getName());
+            ps.setString(3, entity.getLastName());
+            ps.setInt(4, entity.getMajor().getId());
+            if (ps.executeUpdate() > 0)
+                System.out.println("The data inserted successfully");
         } catch (SQLException e) {
             e.printStackTrace();
             throw new ModificationDataException("Can not insert data to db");
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
 
     @Override
     public void update(Integer id, Student newEntity) {
         try (Connection connection = dataSourceConfig.createDataSource().getConnection();
-             PreparedStatement ps = connection.prepareStatement("UPDATE Student " +
-                     "SET name=?, family_name=?, m_id_fk=? " +
-                     "WHERE id=" + id);) {
+             PreparedStatement ps = connection.prepareStatement("UPDATE student " +
+                     " SET name=?, last_name=?, major_id=? WHERE id=?  ")) {
             ps.setString(1, newEntity.getName());
-            ps.setString(2, newEntity.getFamilyName());
+            ps.setString(2, newEntity.getLastName());
             ps.setInt(3, newEntity.getMajor().getId());
+            ps.setInt(4, id);
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -61,8 +54,7 @@ public class StudentDao implements BaseDao<Student, Integer> {
     @Override
     public void delete(Integer id) {
         try (Connection connection = dataSourceConfig.createDataSource().getConnection();
-             PreparedStatement ps = connection.prepareStatement("DELETE FROM Student " +
-                     "WHERE id=?")) {
+             PreparedStatement ps = connection.prepareStatement(" DELETE FROM student WHERE id=?")) {
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -75,15 +67,15 @@ public class StudentDao implements BaseDao<Student, Integer> {
     public Student loadById(Integer id) {
         try (Connection connection = dataSourceConfig.createDataSource().getConnection();
              PreparedStatement ps = connection.prepareStatement("SELECT * " +
-                     "FROM Student WHERE id = ?")) {
+                     " FROM student WHERE id = ?")) {
             ps.setInt(1, id);
             try (ResultSet resultSet = ps.executeQuery()) {
                 Student student = null;
                 while (resultSet.next()) {
                     int studentId = resultSet.getInt("id");
                     String name = resultSet.getString("name");
-                    String familyName = resultSet.getString("family_name");
-                    int majorId = resultSet.getInt("m_id_fk");
+                    String familyName = resultSet.getString("last_name");
+                    int majorId = resultSet.getInt("major_id");
                     student = Student.builder()
                             .id(studentId)
                             .name(name)
@@ -102,16 +94,14 @@ public class StudentDao implements BaseDao<Student, Integer> {
     @Override
     public List<Student> loadAll() {
         try (Connection connection = dataSourceConfig.createDataSource().getConnection();
-             PreparedStatement ps = connection.prepareStatement("SELECT *" +
-                     " FROM Student");
+             PreparedStatement ps = connection.prepareStatement(" SELECT * FROM student");
              ResultSet resultSet = ps.executeQuery()) {
-
             List<Student> students = new ArrayList<>();
             while (resultSet.next()) {
                 int studentId = resultSet.getInt("id");
                 String name = resultSet.getString("name");
-                String familyName = resultSet.getString("family_name");
-                int majorId = resultSet.getInt("m_id_fk");
+                String familyName = resultSet.getString("last_name");
+                int majorId = resultSet.getInt("major_id");
                 Student student = Student.builder()
                         .id(studentId)
                         .name(name)
@@ -127,11 +117,71 @@ public class StudentDao implements BaseDao<Student, Integer> {
         }
     }
 
-    public void startTransaction() throws SQLException {
-        connection.setAutoCommit(false);
+//    public void startTransaction() throws SQLException {
+//        connection.setAutoCommit(false);
+//    }
+//
+//    public void commit() throws SQLException {
+//        connection.commit();
+//    }
+
+    public void printStudentInformationById(int id) {
+        try (Connection connection = dataSourceConfig.createDataSource().getConnection();
+             PreparedStatement ps = connection.prepareStatement(" select s.id,\n " +
+                     " s.name,\n" +
+                     " s.last_name ,\n" +
+                     " s.major_id ,\n" +
+                     " m.name as 'major' \n" +
+                     " from university_management_system.student s \n" +
+                     " join university_management_system.major m on\n" +
+                     " s.major_id = m.id " +
+                     " where s.id=?" )) {
+            ps.setInt(1, id);
+            try (ResultSet resultSet = ps.executeQuery()) {
+                while (resultSet.next()) {
+                    String name = resultSet.getString("name");
+                    String lastName = resultSet.getString("last_name");
+                    int majorId = resultSet.getInt("major_id");
+                    String major = resultSet.getString("major");
+
+                    System.out.printf("%2s %8s %8s %2s %8s\n","id", "first_name", "last_name",  "major_id",  "major_name");
+                    System.out.printf("%2d %8s %8s %2s %8s\n",id,name,lastName,majorId,major);
+
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataNotFoundException("Can not find data from db");
+        }
     }
 
-    public void commit() throws SQLException {
-        connection.commit();
+    public void printStudentInformation() {
+        try (Connection connection = dataSourceConfig.createDataSource().getConnection();
+             PreparedStatement ps = connection.prepareStatement(" select s.id,\n " +
+                     " s.name,\n" +
+                     " s.last_name ,\n" +
+                     " s.major_id ,\n" +
+                     " m.name as 'major' \n" +
+                     " from university_management_system.student s \n" +
+                     " join university_management_system.major m on\n" +
+                     " s.major_id = m.id " +
+                     " where s.id=?" )) {
+            try (ResultSet resultSet = ps.executeQuery()) {
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    String name = resultSet.getString("name");
+                    String lastName = resultSet.getString("last_name");
+                    int majorId = resultSet.getInt("major_id");
+                    String major = resultSet.getString("major");
+
+                    System.out.printf("%2s %8s %8s %2s %8s\n","id", "first_name", "last_name",  "major_id",  "major_name");
+                    System.out.printf("%2d %8s %8s %2s %8s\n",id,name,lastName,majorId,major);
+
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataNotFoundException("Can not find data from db");
+        }
     }
 }

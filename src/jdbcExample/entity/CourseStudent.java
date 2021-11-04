@@ -1,38 +1,35 @@
 package jdbcExample.entity;
 
 import jdbcExample.entity.base.BaseEntity;
-import jdbcExample.entity.base.SecondaryBaseEntity;
 
-public class CourseStudent implements SecondaryBaseEntity<Integer,Integer> {
+
+public class CourseStudent implements BaseEntity<Integer> {
+    private Integer id;
     private Integer studentId;
     private Integer courseId;
     private Double grade;
 
-    public CourseStudent(Integer studentId, Integer courseId, Double grade) {
+    public CourseStudent(Integer id, Integer studentId, Integer courseId, Double grade) {
+        this.id = id;
         this.studentId = studentId;
         this.courseId = courseId;
         this.grade = grade;
     }
 
-    @Override
-    public void setIdOne(Integer id) {
-        this.studentId = id;
-    }
-
-    @Override
-    public Integer getIdOne() {
+    public Integer getStudentId() {
         return studentId;
     }
 
-    @Override
-    public void setIdTwo(Integer id) {
-        this.courseId = id;
-
+    public void setStudentId(Integer studentId) {
+        this.studentId = studentId;
     }
 
-    @Override
-    public Integer getIdTwo() {
+    public Integer getCourseId() {
         return courseId;
+    }
+
+    public void setCourseId(Integer courseId) {
+        this.courseId = courseId;
     }
 
     public Double getGrade() {
@@ -41,5 +38,15 @@ public class CourseStudent implements SecondaryBaseEntity<Integer,Integer> {
 
     public void setGrade(Double grade) {
         this.grade = grade;
+    }
+
+    @Override
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    @Override
+    public Integer getId() {
+        return id;
     }
 }

@@ -11,6 +11,8 @@ import jdbcExample.service.MajorService;
 import jdbcExample.service.StudentService;
 import jdbcExample.utility.IdGenerator;
 
+import java.util.List;
+
 public class UiManager {
     private StudentService studentService;
     private MajorService majorService;
@@ -21,8 +23,8 @@ public class UiManager {
     public UiManager() {
         studentService = new StudentService();
         majorService = new MajorService();
-        courseService = new CourseService();
         courseStudentService = new CourseStudentService();
+        courseService = new CourseService();
         student = new Student();
     }
 
@@ -51,15 +53,18 @@ public class UiManager {
     public void studentActions() {
         boolean isExit = false;
         while (!isExit) {
-            System.out.println("*** Student MANAGEMENT SYSTEM ***");
             System.out.println("""
                             --- Please select an  action:  ---
                                 1- add a student;
-                                2- update the student information
-                                3- Delete a  student by id
-                                4- get a student by id
-                                5-print list of all students
-                                6-exit
+                                2- add course for a student
+                                3- delete course for a student
+                                4- show course by id
+                                5- show course list for student
+                                6- update the student information
+                                7- Delete a  student by id
+                                8- get a student by id
+                                9-print list of all students
+                                10-exit
                     """);
             int option = Input.getInputValue("");
             switch (option) {
@@ -79,7 +84,6 @@ public class UiManager {
     }
 
     public void studentCreator() {
-        Student student = null;
         int studentId = IdGenerator.idGenerator();
         String name = Input.getStringInputValue("Enter your name");
         String lastName = Input.getStringInputValue("Enter your lastname");
@@ -87,45 +91,44 @@ public class UiManager {
         int majorId = Input.getInputValue("Enter your major id");
         Major major = new Major(majorId, majorName);
 
-        student = Student.builder().id(studentId).name(name).familyName(lastName).major(major).build();
-        studentService.saveOrUpdate(student);
+        Student student = Student.builder().id(studentId).name(name).familyName(lastName).major(major).build();
+        studentService.getBaseDao().save(student);
     }
 
     public void addCourseToStudents() {
         boolean add = true;
-        while (add){
+        while (add) {
             CourseStudent courseStudent = null;
+            int id = jdbcExample.utility.Input.getInputValue("Enter the id");
             int studentId = jdbcExample.utility.Input.getInputValue("Enter the student id");
             int courseId = jdbcExample.utility.Input.getInputValue("Enter the course id");
-            courseStudent = new CourseStudent(studentId, courseId, null);
-            courseStudentService.saveOrUpdate(courseStudent);
+            courseStudent = new CourseStudent(id, studentId, courseId, null);
+            courseStudentService.save(courseStudent);
             int choice = jdbcExample.utility.Input.getInputValue("Do you want to insert more course? " +
                     "1)yes 2)No");
-            if(choice==2)
+            if (choice == 2)
                 add = false;
         }
     }
 
     public void deleteCourseFromStudent() {
         boolean delete = true;
-        while (delete){
-        int studentId = jdbcExample.utility.Input.getInputValue("Enter the student id");
-        int courseId = jdbcExample.utility.Input.getInputValue("Enter the course id");
-        courseStudentService.deleteById(studentId, courseId);
+        while (delete) {
+            int id = jdbcExample.utility.Input.getInputValue("Enter the id");
+            courseStudentService.deleteById(id);
             int choice = jdbcExample.utility.Input.getInputValue("Do you want to delete more course? " +
                     "1)yes 2)No");
-            if(choice==2)
+            if (choice == 2)
                 delete = false;
         }
     }
 
-    public void showCourseByIdForStudent(){
-        int studentId = jdbcExample.utility.Input.getInputValue("Enter the student id");
-        int courseId = jdbcExample.utility.Input.getInputValue("Enter the course id");
-        courseStudentService.loadById(studentId,courseId);
+    public void showCourseByIdForStudent() {
+        int id = jdbcExample.utility.Input.getInputValue("Enter the id");
+        courseStudentService.loadById(id);
     }
 
-    public void showCourseListForStudent(){
+    public void showCourseListForStudent() {
         courseStudentService.loadAll();
     }
 
@@ -140,118 +143,58 @@ public class UiManager {
 
     public void studentGetterById() {
         int studentId = jdbcExample.utility.Input.getInputValue("Enter student id");
-        studentService.loadByid(studentId);
+        studentService.printStudentInformationById(studentId);
     }
 
     public void studentsGetter() {
-        studentService.loadAll();
+        studentService.printAllStudentsInformation();
     }
 
 
     public void majorActions() {
         boolean isExit = false;
         while (!isExit) {
-            System.out.println("*** Student MANAGEMENT SYSTEM ***");
             System.out.println("""
                             --- Please select an  action:  ---
-                                1- add a Major;
-                                2- update the Major information
-                                3- Delete a Major by id
-                                4- get a major by id
-                                5-print list of all Majors
-                                6-exit
+                                1-print list of all Majors
+                                2-exit
                     """);
             int option = Input.getInputValue("");
             switch (option) {
-                case 1 -> majorCreator();
-                case 2 -> majorUpdater();
-                case 3 -> majorDeleter();
-                case 4 -> majorGetterById();
-                case 5 -> majorsGetter();
-                case 6 -> isExit = true;
-                default -> System.out.println("Please enter a number in range between 1-6");
+                case 1 -> majorsGetter();
+                case 2 -> isExit = true;
+                default -> System.out.println("Please enter a number in range between 1-2");
             }
         }
     }
 
-    public void majorCreator() {
-        Major major = null;
-        String name = Input.getStringInputValue("Enter major name");
-        int id = Input.getInputValue("Enter major id");
-        major = new Major(id, name);
-        majorService.saveOrUpdate(major);
-    }
-
-    public void majorUpdater() {
-
-    }
-
-    public void majorDeleter() {
-        int id = Input.getInputValue("Enter major id");
-        majorService.deleteById(id);
-    }
-
-    public void majorGetterById() {
-        int id = Input.getInputValue("Enter major id");
-        studentService.loadByid(id);
-    }
 
     public void majorsGetter() {
-        majorService.loadAll();
+        majorService.printCourseInformation();
     }
 
 
     public void courseActions() {
         boolean isExit = false;
         while (!isExit) {
-            System.out.println("*** Student MANAGEMENT SYSTEM ***");
             System.out.println("""
                             --- Please select an  action:  ---
-                                1- add a course;
-                                2- update the course information
-                                3- Delete a course by id
-                                4- get a course by id
-                                5-print list of all course
-                                6-exit
+                                1-print list of all course
+                                2-exit
                     """);
             int option = Input.getInputValue("");
             switch (option) {
-                case 1 -> courseCreator();
-                case 2 -> courseUpdater();
-                case 3 -> courseDeleter();
-                case 4 -> courseGetterById();
-                case 5 -> coursesGetter();
-                case 6 -> isExit = true;
-                default -> System.out.println("Please enter a number in range between 1-6");
+                case 1 -> coursesGetter();
+                case 2 -> isExit = true;
+                default -> System.out.println("Please enter a number in range between 1-2");
             }
         }
     }
 
-    public void courseCreator() {
-
-        int id = Input.getInputValue("Enter course id");
-        String name = Input.getStringInputValue("Enter course name");
-        int unit = Input.getInputValue("Enter course unit");
-        Course course = new Course(id, name, unit);
-        courseService.saveOrUpdate(course);
-    }
-
-    public void courseUpdater() {
-
-    }
-
-    public void courseDeleter() {
-        int id = Input.getInputValue("Enter course id");
-        courseService.deleteById(id);
-    }
-
-    public void courseGetterById() {
-        int id = Input.getInputValue("Enter course id");
-        courseService.loadByid(id);
-    }
-
     public void coursesGetter() {
-        courseService.loadAll();
+        List<Course> courses = courseService.getBaseDao().loadAll();
+        for (Course course : courses)
+            System.out.println(course);
     }
 
 

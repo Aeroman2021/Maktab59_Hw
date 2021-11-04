@@ -1,17 +1,16 @@
 package jdbcExample.service;
 
 import jdbcExample.dao.CourseStudentDao;
-import jdbcExample.dao.core.SecondaryBaseDao;
 import jdbcExample.entity.CourseStudent;
 
-public class CourseStudentService extends  SecondaryAbstractCrudService<CourseStudent,Integer,Integer>{
+public class CourseStudentService extends AbstractCrudService<CourseStudent,Integer>{
 
     public CourseStudentService() {
-        setSecondaryBaseDao(new CourseStudentDao());
+        setBaseDao(new CourseStudentDao());
     }
 
     @Override
-    public CourseStudentDao getSecondaryBaseDao() {
-        return (CourseStudentDao) super.getSecondaryBaseDao();
+    public CourseStudentDao getBaseDao() {
+        return (CourseStudentDao) super.getBaseDao();
     }
 }

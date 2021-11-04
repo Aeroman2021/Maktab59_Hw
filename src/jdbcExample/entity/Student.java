@@ -9,14 +9,14 @@ import java.util.Set;
 public class Student implements BaseEntity<Integer> {
     private Integer id;
     private String name;
-    private String familyName;
+    private String lastName;
     private Major major;
     private Set<Course> courses;
 
     public Student(Integer id, String name, String familyName, Major major, Set<Course> courses) {
         this.id = id;
         this.name = name;
-        this.familyName = familyName;
+        this.lastName = familyName;
         this.major = major;
         this.courses = courses;
     }
@@ -42,12 +42,12 @@ public class Student implements BaseEntity<Integer> {
         this.name = name;
     }
 
-    public String getFamilyName() {
-        return familyName;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setFamilyName(String familyName) {
-        this.familyName = familyName;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public Major getMajor() {
@@ -95,10 +95,20 @@ public class Student implements BaseEntity<Integer> {
         return "Student{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", familyName='" + familyName + '\'' +
+                ", familyName='" + lastName + '\'' +
                 ", major=" + major +
                 ", courses=" + courses +
                 '}';
+    }
+
+    public void printStudentInformation(Student student){
+        Integer id = student.getId();
+        String name = student.getName();
+        String lastName = student.getLastName();
+        Integer majorId = student.getMajor().getId();
+        String majorName = student.getMajor().getName();
+        System.out.printf("%2s%8s%8s%2s%8s\n","id","first_name","last_name","major_id","major_name");
+        System.out.printf("%2s%8s%8s%2s%8s\n",id,name,lastName,majorId,majorName);
     }
 
     public static StudentBuilder builder() {

@@ -14,4 +14,8 @@ public class MajorService extends AbstractCrudService<Major,Integer>{
     public MajorDao getBaseDao() {
         return (MajorDao )super.getBaseDao();
     }
+
+    public void printCourseInformation(){
+        getBaseDao().printCourseInformation();
+    }
 }

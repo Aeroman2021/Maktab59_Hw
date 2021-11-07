@@ -165,5 +165,10 @@ public class DbInitializer {
         return (courseService.getBaseDao().loadAll() == null);
     }
 
+    public void tablesInit(){
+        courseInit();
+        majorInit();
+    }
+
 
 }

@@ -117,14 +117,6 @@ public class StudentDao implements BaseDao<Student, Integer> {
         }
     }
 
-//    public void startTransaction() throws SQLException {
-//        connection.setAutoCommit(false);
-//    }
-//
-//    public void commit() throws SQLException {
-//        connection.commit();
-//    }
-
     public void printStudentInformationById(int id) {
         try (Connection connection = dataSourceConfig.createDataSource().getConnection();
              PreparedStatement ps = connection.prepareStatement(" select s.id,\n " +
@@ -184,4 +176,11 @@ public class StudentDao implements BaseDao<Student, Integer> {
             throw new DataNotFoundException("Can not find data from db");
         }
     }
+
+    public boolean studentIsExist(Student student){
+        
+
+    }
+
+
 }

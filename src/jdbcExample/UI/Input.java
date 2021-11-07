@@ -1,8 +1,11 @@
-package jdbcExample.utility;
+package jdbcExample.UI;
+import jdbcExample.exception.InvalidDataException;
+import jdbcExample.utility.Printer;
+
 import java.util.Scanner;
 
 public class Input {
-    private static Scanner input = new Scanner(System.in);
+    private static final  Scanner input = new Scanner(System.in);
 
     public static String getOptionalStringInputValue(String msg) {
         System.out.print(msg + " ");
@@ -41,6 +44,33 @@ public class Input {
                 if (msg.isEmpty())
                     System.out.println("> ");
             }
+        }
+    }
+
+    public static boolean getBooleanValue(String msg) {
+        while (true){
+            try {
+                Boolean.parseBoolean(getStringInputValue(msg));
+            } catch (Exception e) {
+                Printer.printErrorMessage("Invalid input");
+                if (msg.isEmpty())
+                    System.out.println("> ");
+            }
+        }
+    }
+
+    public static String getString() {
+        String next = input.nextLine();
+        if (next.equals("") || next.equals(" "))
+            throw new InvalidDataException("Invalid input. Please enter 1 for more info.");
+        return next;
+    }
+
+    public static int getInt() {
+        try {
+            return Integer.parseInt(getString());
+        } catch (Exception e) {
+            throw new InvalidDataException("Invalid input. Please enter 1 for more info.");
         }
     }
 

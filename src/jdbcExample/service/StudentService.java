@@ -21,6 +21,10 @@ public class StudentService extends AbstractCrudService<Student, Integer> {
         getBaseDao().printStudentInformation();
     }
 
+    public boolean studentIsExist(Student student){
+        return !getBaseDao().studentIsExist(student);
+    }
+
 
 
 }

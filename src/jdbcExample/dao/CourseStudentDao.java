@@ -49,6 +49,20 @@ public class CourseStudentDao implements BaseDao<CourseStudent, Integer> {
         }
     }
 
+    public void updateCourseForStudent(Integer id,Integer courseId){
+        try (Connection connection = dataSourceConfig.createDataSource().getConnection();
+             PreparedStatement ps = connection.prepareStatement("UPDATE " +
+                     " university_management_system.course_student " +
+                     " SET course_id=? WHERE id=?")) {
+            ps.setInt(1,courseId );
+            ps.setInt(2, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ModificationDataException("Can not update data to db");
+        }
+    }
+
     @Override
     public void delete(Integer id) {
         try (Connection connection = dataSourceConfig.createDataSource().getConnection();

@@ -47,7 +47,7 @@ public class Menu {
                 5. Load Item by Id
                 6. Load all items
                 7. Exit
-                                                    
+                                                  
                         """);
     }
 }

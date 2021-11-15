@@ -26,17 +26,14 @@ public class DeleteItem implements MenuCommand {
     @Override
     public void execute() {
         System.out.println("""
-                To To delete an entity please select a correspond number:
-                1) Student
-                2) Course
-                3) Major
+                1) Delete a Student from database
+                2) Delete Course from  Student's course list.
                 """);
         int selectedItem = Input.getInputValue("Enter number");
 
         switch (selectedItem) {
             case 1 -> studentViewer.deleteStudent();
-            case 2 -> courseViewer.deleteCourse();
-            case 3 -> majorViewer.deleteMajor();
+            case 2 -> courseViewer.deleteCourseForStudent();
         }
 
     }

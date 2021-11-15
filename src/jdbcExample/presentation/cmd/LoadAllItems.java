@@ -27,7 +27,7 @@ public class LoadAllItems implements MenuCommand {
     @Override
     public void execute() {
         System.out.println("""
-                To To Load All entity  please select a correspond number:
+                To To Load The list of an entity, please select a correspond number:
                 1) Student
                 2) Course
                 3) Major

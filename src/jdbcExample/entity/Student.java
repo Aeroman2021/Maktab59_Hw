@@ -82,7 +82,7 @@ public class Student implements BaseEntity<Integer> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Student student = (Student) o;
-        return Objects.equals(id, student.id);
+        return Objects.equals(student.name,student.lastName);
     }
 
     @Override

@@ -178,8 +178,13 @@ public class StudentDao implements BaseDao<Student, Integer> {
     }
 
     public boolean studentIsExist(Student student){
-        
-
+        List<Student> students = loadAll();
+        for(Student student1 : students){
+            if(student1.getName().equalsIgnoreCase(student.getName())&&
+            student1.getLastName().equalsIgnoreCase(student.getLastName()))
+                return true;
+        }
+        return false;
     }
 
 

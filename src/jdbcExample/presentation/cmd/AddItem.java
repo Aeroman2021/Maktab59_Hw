@@ -25,17 +25,14 @@ public class AddItem implements MenuCommand {
     public void execute() {
 
         System.out.println("""
-                To To add an entity please select a correspond number:
-                1) Student
-                2) Course
-                3) Major
+                1) Add Student to the database
+                2) Add Course for student
                 """);
         int selectedItem = Input.getInputValue("Enter number");
 
         switch (selectedItem) {
             case 1 -> studentViewer.addStudent();
-            case 2 -> courseViewer.addCourse();
-            case 3 -> majorViewer.addMajor();
+            case 2 -> courseViewer.addCourseForStudent();
         }
     }
 }

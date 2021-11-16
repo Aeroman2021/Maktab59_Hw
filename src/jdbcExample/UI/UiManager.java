@@ -170,7 +170,7 @@ public class UiManager {
 
 
     public void majorsGetter() {
-        majorService.printCourseInformation();
+        majorService.printMajorInformation();
     }
 
 

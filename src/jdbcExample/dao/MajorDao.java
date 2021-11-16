@@ -32,12 +32,12 @@ public class MajorDao implements BaseDao<Major, Integer> {
 
     @Override
     public void update(Integer id, Major newEntity) {
-        try ( Connection connection = dataSourceConfig.createDataSource().getConnection();
-              PreparedStatement preparedStatement = connection.prepareStatement("UPDATE major " +
-                      "SET name=?  WHERE id=?;")) {
-                preparedStatement.setString(1, newEntity.getName());
-                preparedStatement.setInt(2, id);
-                preparedStatement.executeUpdate();
+        try (Connection connection = dataSourceConfig.createDataSource().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE major " +
+                     "SET name=?  WHERE id=?;")) {
+            preparedStatement.setString(1, newEntity.getName());
+            preparedStatement.setInt(2, id);
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Unable to update the major to the database");
@@ -46,10 +46,10 @@ public class MajorDao implements BaseDao<Major, Integer> {
 
     @Override
     public void delete(Integer id) {
-        try ( Connection connection = dataSourceConfig.createDataSource().getConnection();
-              PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM major WHERE id=?")) {
-                preparedStatement.setInt(1, id);
-                preparedStatement.executeUpdate();
+        try (Connection connection = dataSourceConfig.createDataSource().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM major WHERE id=?")) {
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Unable to update the major to the database");
@@ -63,7 +63,7 @@ public class MajorDao implements BaseDao<Major, Integer> {
                      " FROM major WHERE id = ?")) {
             ps.setInt(1, id);
             try (ResultSet resultSet = ps.executeQuery()) {
-               Major major = null;
+                Major major = null;
                 while (resultSet.next()) {
                     String name = resultSet.getString("name");
                     major = new Major(id, name);
@@ -96,18 +96,18 @@ public class MajorDao implements BaseDao<Major, Integer> {
         }
     }
 
-    public void printCourseInformation() {
+    public void printMajorInformation() {
         try (Connection connection = dataSourceConfig.createDataSource().getConnection();
              PreparedStatement ps = connection.prepareStatement("SELECT * FROM major");
              ResultSet resultSet = ps.executeQuery()) {
 
-            System.out.printf("%2s %8s \n", "id", "major");
+            System.out.println(" id" + " | " + " major_name");
+            System.out.println("_____________________");
             while (resultSet.next()) {
                 String name = resultSet.getString("name");
                 int id = resultSet.getInt("id");
 
-                System.out.printf("%2d %8s \n",id,name);
-
+                System.out.println(id + "| " + name);
             }
 
         } catch (SQLException e) {

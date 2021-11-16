@@ -17,4 +17,12 @@ public class CourseStudentService extends AbstractCrudService<CourseStudent,Inte
     public void updateStudentCourse(Integer id,Integer courseId){
         getBaseDao().updateCourseForStudent(id,courseId);
     }
+
+    public void deleteCourseByStudentIdAndCourseId(Integer studentId,Integer courseId){
+        getBaseDao().deleteByStudentIdAndCourseID(studentId,courseId);
+    }
+
+    public boolean courseListOfStudentIsEmpty(Integer studentId){
+        return getBaseDao().loadCourseOfTheStudent(studentId).isEmpty();
+    }
 }

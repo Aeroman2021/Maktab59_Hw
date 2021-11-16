@@ -56,7 +56,8 @@ public class StudentDao implements BaseDao<Student, Integer> {
         try (Connection connection = dataSourceConfig.createDataSource().getConnection();
              PreparedStatement ps = connection.prepareStatement(" DELETE FROM student WHERE id=?")) {
             ps.setInt(1, id);
-            ps.executeUpdate();
+            if(ps.executeUpdate()>0)
+                System.out.println("The student with id " + id + " deleted successfully.");
         } catch (SQLException e) {
             e.printStackTrace();
             throw new ModificationDataException("Can not update data to db");
@@ -127,7 +128,7 @@ public class StudentDao implements BaseDao<Student, Integer> {
                      " from university_management_system.student s \n" +
                      " join university_management_system.major m on\n" +
                      " s.major_id = m.id " +
-                     " where s.id=?" )) {
+                     " where s.id=?")) {
             ps.setInt(1, id);
             try (ResultSet resultSet = ps.executeQuery()) {
                 while (resultSet.next()) {
@@ -136,9 +137,8 @@ public class StudentDao implements BaseDao<Student, Integer> {
                     int majorId = resultSet.getInt("major_id");
                     String major = resultSet.getString("major");
 
-                    System.out.printf("%2s %8s %8s %2s %8s\n","id", "first_name", "last_name",  "major_id",  "major_name");
-                    System.out.printf("%2d %8s %8s %2s %8s\n",id,name,lastName,majorId,major);
-
+                    System.out.printf("%2s %8s %8s %2s %8s\n", "id", "first_name", "last_name", "major_id", "major_name");
+                    System.out.printf("%2d %8s %8s %2s %8s\n", id, name, lastName, majorId, major);
                 }
             }
         } catch (SQLException e) {
@@ -156,19 +156,18 @@ public class StudentDao implements BaseDao<Student, Integer> {
                      " m.name as 'major' \n" +
                      " from university_management_system.student s \n" +
                      " join university_management_system.major m on\n" +
-                     " s.major_id = m.id " +
-                     " where s.id=?" )) {
+                     " s.major_id = m.id ")) {
             try (ResultSet resultSet = ps.executeQuery()) {
+                System.out.println("id " + " | " + "first_name " + " | " +
+                        " last_name " + " | " + "major_id" + " | " + "major_Name");
+                System.out.println("______________________________________________");
                 while (resultSet.next()) {
                     int id = resultSet.getInt("id");
                     String name = resultSet.getString("name");
                     String lastName = resultSet.getString("last_name");
                     int majorId = resultSet.getInt("major_id");
                     String major = resultSet.getString("major");
-
-                    System.out.printf("%2s %8s %8s %2s %8s\n","id", "first_name", "last_name",  "major_id",  "major_name");
-                    System.out.printf("%2d %8s %8s %2s %8s\n",id,name,lastName,majorId,major);
-
+                    System.out.println(id + " | " + name + " | " + lastName + " | " + majorId + " | " + major);
                 }
             }
         } catch (SQLException e) {
@@ -176,16 +175,5 @@ public class StudentDao implements BaseDao<Student, Integer> {
             throw new DataNotFoundException("Can not find data from db");
         }
     }
-
-    public boolean studentIsExist(Student student){
-        List<Student> students = loadAll();
-        for(Student student1 : students){
-            if(student1.getName().equalsIgnoreCase(student.getName())&&
-            student1.getLastName().equalsIgnoreCase(student.getLastName()))
-                return true;
-        }
-        return false;
-    }
-
 
 }

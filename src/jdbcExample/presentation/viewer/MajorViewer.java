@@ -34,4 +34,8 @@ public class MajorViewer {
         }
     }
 
+    public void printAllMajorsInformation(){
+        majorService.printMajorInformation();
+    }
+
 }

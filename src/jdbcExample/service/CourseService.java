@@ -14,4 +14,12 @@ public class CourseService extends AbstractCrudService<Course,Integer> {
     public CourseDao getBaseDao() {
         return (CourseDao) super.getBaseDao();
     }
+
+    public void printCourseInformation(){
+        getBaseDao().printCourseInformation();
+    }
+
+    public void printCourseListOfTheStudent(Integer studentId){
+        getBaseDao().loadCourseByStudentId(studentId);
+    }
 }

@@ -12,6 +12,7 @@ public interface BaseDao<T extends BaseEntity<ID>, ID extends Number> {
     void update(ID id, T newEntity);
 
     void delete(ID id);
+    default void deleteByStudentIdAndCourseID(ID id1,ID id2){}
 
     T loadById(ID id);
 

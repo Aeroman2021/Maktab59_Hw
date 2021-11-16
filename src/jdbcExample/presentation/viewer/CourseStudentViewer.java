@@ -25,12 +25,12 @@ public class CourseStudentViewer {
         }
     }
 
-    public void updateCourseListForStudent(){
+    public void updateCourseListForStudent() {
         boolean updateMoreCourse = true;
-        while (updateMoreCourse){
+        while (updateMoreCourse) {
             int id = Input.getInputValue("Enter id");
             int courseId = Input.getInputValue("Enter course id");
-            courseStudentService.updateStudentCourse(id,courseId);
+            courseStudentService.updateStudentCourse(id, courseId);
             int inputValue = Input.getInputValue("Do you want to add more course? 1)Yes 2)NO");
             if (inputValue == 2)
                 updateMoreCourse = false;

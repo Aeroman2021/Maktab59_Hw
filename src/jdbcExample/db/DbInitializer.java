@@ -66,7 +66,7 @@ public class DbInitializer {
         private static class CourseStudent {
             private static final String CREATE_TABLE =
                     " create table if not exists course_student (" +
-                            "  `id` int(11) NOT NULL," +
+                            "  `id` int(11) NOT NULL AUTO_INCREMENT," +
                             "`student_id` smallint(6) NOT NULL," +
                             "`course_id` smallint(6) NOT NULL," +
                             " `grade` int(11) DEFAULT NULL," +

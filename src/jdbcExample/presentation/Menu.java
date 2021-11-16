@@ -1,7 +1,6 @@
 package jdbcExample.presentation;
 
 import jdbcExample.UI.Input;
-import jdbcExample.exception.InvalidDataException;
 import jdbcExample.presentation.cmd.*;
 
 import java.util.List;
@@ -15,8 +14,8 @@ public class Menu {
     }
 
     public List<MenuCommand> initialCommand() {
-        return List.of(new AddItem(), new DeleteItem(), new LoadItemById(),
-                new LoadAllItems());
+        return List.of(new HelpItem(), new AddItem(),new UpdateItem(), new DeleteItem(), new LoadItemById(),
+                new LoadAllItems(), new ExitItem());
     }
 
     public void startApplication() {
@@ -25,12 +24,11 @@ public class Menu {
             menu();
             showMenu = chooseMenu();
         }
-
     }
 
     public boolean chooseMenu() {
         int selected = Input.getInt();
-        if (selected >= 8)
+        if (selected >= 7)
             return false;
         menuCommandExecutor.execute(selected);
         return true;

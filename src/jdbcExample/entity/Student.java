@@ -82,33 +82,12 @@ public class Student implements BaseEntity<Integer> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Student student = (Student) o;
-        return Objects.equals(student.name,student.lastName);
+        return Objects.equals(student.name, student.lastName);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "Student{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", familyName='" + lastName + '\'' +
-                ", major=" + major +
-                ", courses=" + courses +
-                '}';
-    }
-
-    public void printStudentInformation(Student student){
-        Integer id = student.getId();
-        String name = student.getName();
-        String lastName = student.getLastName();
-        Integer majorId = student.getMajor().getId();
-        String majorName = student.getMajor().getName();
-        System.out.printf("%2s%8s%8s%2s%8s\n","id","first_name","last_name","major_id","major_name");
-        System.out.printf("%2s%8s%8s%2s%8s\n",id,name,lastName,majorId,majorName);
     }
 
     public static StudentBuilder builder() {

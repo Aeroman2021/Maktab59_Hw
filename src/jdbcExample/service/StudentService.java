@@ -3,6 +3,8 @@ package jdbcExample.service;
 import jdbcExample.dao.StudentDao;
 import jdbcExample.entity.Student;
 
+import java.util.List;
+
 public class StudentService extends AbstractCrudService<Student, Integer> {
 
     public StudentService() {
@@ -19,10 +21,6 @@ public class StudentService extends AbstractCrudService<Student, Integer> {
 
     public void printAllStudentsInformation(){
         getBaseDao().printStudentInformation();
-    }
-
-    public boolean studentIsExist(Student student){
-        return !getBaseDao().studentIsExist(student);
     }
 
 

@@ -1,7 +1,6 @@
 package jdbcExample.service;
 
 import jdbcExample.dao.MajorDao;
-import jdbcExample.dao.core.BaseDao;
 import jdbcExample.entity.Major;
 
 public class MajorService extends AbstractCrudService<Major,Integer>{
@@ -15,7 +14,7 @@ public class MajorService extends AbstractCrudService<Major,Integer>{
         return (MajorDao )super.getBaseDao();
     }
 
-    public void printCourseInformation(){
-        getBaseDao().printCourseInformation();
+    public void printMajorInformation(){
+        getBaseDao().printMajorInformation();
     }
 }

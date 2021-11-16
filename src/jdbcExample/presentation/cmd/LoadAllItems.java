@@ -16,7 +16,6 @@ public class LoadAllItems implements MenuCommand {
         studentViewer = new StudentViewer();
         courseViewer = new CourseViewer();
         majorViewer = new MajorViewer();
-
     }
 
     @Override
@@ -32,12 +31,12 @@ public class LoadAllItems implements MenuCommand {
                 2) Course
                 3) Major
                 """);
-        int selectedItem = Input.getInputValue("Enter number");
+        int selectedItem = Input.getInputValue("Enter a number");
 
         switch (selectedItem) {
-            case 1 -> studentViewer.loadAllStudents();
-            case 2 -> courseViewer.loadAllCourses();
-            case 3 -> majorViewer.loadAllMajors();
+            case 1 -> studentViewer.printAllStudentsInformation();
+            case 2 -> courseViewer.printCourseInformation();
+            case 3 -> majorViewer.printAllMajorsInformation();
         }
     }
 

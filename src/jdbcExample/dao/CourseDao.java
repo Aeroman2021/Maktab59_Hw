@@ -101,4 +101,45 @@ public class CourseDao implements BaseDao<Course, Integer> {
         }
     }
 
+    public void printCourseInformation() {
+        try (Connection connection = dataSourceConfig.createDataSource().getConnection();
+             PreparedStatement ps = connection.prepareStatement("SELECT * FROM course");
+             ResultSet resultSet = ps.executeQuery()) {
+            System.out.println("id" + " | " + " name " + " | " + " unit");
+            System.out.println("__________________");
+            while (resultSet.next()) {
+                String name = resultSet.getString("name");
+                int id = resultSet.getInt("id");
+                int unit = resultSet.getInt("unit");
+                System.out.println(id + "| " +  name + " | " + unit);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataNotFoundException("Can not find data from db");
+        }
+
+    }
+
+    public void loadCourseByStudentId(Integer studentId){
+        try (Connection connection = dataSourceConfig.createDataSource().getConnection();
+             PreparedStatement ps = connection.prepareStatement(
+                     " select course_id ,name from university_management_system.course_student cs "+
+                    " join university_management_system.course c on" +
+                    " cs.id = c.id    where  student_id = ? order by course_id asc ")) {
+            ps.setInt(1, studentId);
+            try (ResultSet resultSet = ps.executeQuery()) {
+                System.out.println("The course list are :");
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("course_id");
+                    String name = resultSet.getString("name");
+                    System.out.println("id= " + id + " -> " + name );
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataNotFoundException("Can not find data from db");
+        }
+    }
+
 }

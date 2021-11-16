@@ -16,6 +16,18 @@ public class CourseStudent implements BaseEntity<Integer> {
         this.grade = grade;
     }
 
+    public CourseStudent(Integer studentId, Integer courseId, Double grade) {
+        this.studentId = studentId;
+        this.courseId = courseId;
+        this.grade = grade;
+    }
+
+    public CourseStudent(Integer studentId, Integer courseId) {
+        this.studentId = studentId;
+        this.courseId = courseId;
+    }
+
+
     public Integer getStudentId() {
         return studentId;
     }
